@@ -27,7 +27,7 @@ Puppet::Type.newtype(:acl) do
       permissions are set recursively on /var/www/html as well as add
       default permissions that will apply to new directories and files
       created under /var/www/html
-
+  
       Setting an ACL can change a file's mode bits, so if the file is
       managed by a File resource, that resource needs to set the mode
       bits according to what the calculated mode bits will be, for
@@ -61,7 +61,7 @@ Puppet::Type.newtype(:acl) do
     end
   end
 
-  newproperty(:permission, :array_matching => :all) do
+  newproperty(:permission, :array_matching => :all) do 
     desc "ACL permission(s)."
 
     def is_to_s(value)
@@ -100,24 +100,16 @@ Puppet::Type.newtype(:acl) do
       value.sort
     end
 
-    # in unset_insync and set_insync the test_should has been added as a work around
-    #  to prevent puppet-acl from interpreting recursive permission notation (e.g. rwX)
-    #  from causing a false mismatch.  A better solution needs to be implemented to
-    #  recursively check permissions, not rely upon getfacl
     def unset_insync(cur_perm)
       # Puppet.debug "permission.unset_insync"
-      test_should = []
-      @should.each { |x| test_should << x.downcase() }
       cp = strip_perms(cur_perm)
-      sp = strip_perms(test_should)
+      sp = strip_perms(@should)
       (sp - cp).sort == sp
     end
 
     def set_insync(cur_perm)
       # Puppet.debug "permission.set_insync"
-      test_should = []
-      @should.each { |x| test_should << x.downcase() }
-      (cur_perm.sort == test_should.sort) or (provider.check_set and ((test_should - cur_perm).length == 0))
+      (cur_perm.sort == @should.sort) or (provider.check_set and ((@should - cur_perm).length == 0))
     end
 
     def purge_insync(cur_perm)
