@@ -92,9 +92,29 @@ describe acl_type do
       expect(resource[:name]).to eq('/tmp/foo')
       expect(resource[:recursive]).to eq(:false)
     end
+    it 'should get recursemode lazy by default' do
+      resource = acl_type.new :name => '/tmp/foo', :permission => ['o::rwx']
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:recursemode]).to eq(:lazy)
+    end
+    it 'should accept a recursemode deep' do
+      resource = acl_type.new :name => '/tmp/foo', :permission => ['o::rwx'], :recursemode => 'deep'
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:recursemode]).to eq(:deep)
+    end
+    it 'should accept a recursemode lazy' do
+      resource = acl_type.new :name => '/tmp/foo', :permission => ['o::rwx'], :recursemode => :lazy
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:recursemode]).to eq(:lazy)
+    end
     it 'should fail with a wrong action' do
       expect{
         acl_type.new :name => '/tmp/foo', :permission => ['o::rwx'], :action => :xset
+      }.to raise_error
+    end
+    it 'should fail with a wrong recurselimit' do
+      expect{
+        acl_type.new :name => '/tmp/foo', :permission => ['o::rwx'], :recurselimit => :a
       }.to raise_error
     end
     it 'should fail with a wrong first argument' do

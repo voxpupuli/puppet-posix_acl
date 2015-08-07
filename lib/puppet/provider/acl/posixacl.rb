@@ -65,7 +65,7 @@ Puppet::Type.type(:acl).provide(:posixacl, :parent => Puppet::Provider::Acl) do
   
   def check_recursive
     # Changed functionality to return boolean true or false
-    value = (@resource.value(:recursive) == :true)
+    value = (@resource.value(:recursive) == :true and resource.value(:recursemode) == :lazy)
   end
 
   def check_exact
