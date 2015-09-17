@@ -55,6 +55,17 @@ Puppet::Type.newtype(:acl) do
     end
   end
 
+  newparam(:recursemode) do
+    desc "Should Puppet apply the ACL recursively with the -R option or
+      apply it to individual files?
+
+      lazy means -R option
+      deep means apply to every file"
+
+    newvalues(:lazy, :deep)
+    defaultto :lazy
+  end
+
   autorequire(:file) do
     if self[:path]
       [self[:path]]
@@ -184,7 +195,7 @@ Puppet::Type.newtype(:acl) do
         s = p.tr '-', ''
         r << (s.sub!('r', '')?'r':'-')
         r << (s.sub!('w', '')?'w':'-')
-        r << (s.sub!('x', '')?'x':'-')
+        r << (s.sub!('x', '')?'x':'-')#'
         if !s.empty?
           raise ArgumentError, %(Invalid permission set "#{p}".)
         end
@@ -197,6 +208,30 @@ Puppet::Type.newtype(:acl) do
     desc "Apply ACLs recursively."
     newvalues(:true, :false)
     defaultto :false
+  end
+
+  def newchild(path)
+    full_path = ::File.join(self[:path], path)
+    options = @original_parameters.merge(:name => full_path).reject { |param, value| value.nil? }
+    unless File.directory?(options[:name]) then
+      options[:permission].reject! { |acl| acl.split(':', -1).length == 4 } if options.include?(:permission)
+    end
+    [:recursive, :recursemode, :path].each do |param|
+      options.delete(param) if options.include?(param)
+    end
+    self.class.new(options)
+  end
+
+  def generate
+    return [] unless self[:recursive] == :true and self[:recursemode] == :deep
+    return [] unless File.directory?(self[:path])
+    results = []
+    Dir.chdir(self[:path]) do
+      Dir['**/*'].each do |path|
+        results << newchild(path)
+      end
+    end
+    results
   end
 
   validate do
