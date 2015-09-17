@@ -187,15 +187,15 @@ Puppet::Type.newtype(:acl) do
       p = a.shift
       if p =~ /[0-7]/
         p = p.oct
-        r << ( p | 4 ? 'r':'-')
-        r << ( p | 2 ? 'w':'-')
-        r << ( p | 1 ? 'x':'-')
+        r << (p | 4 ? 'r' : '-')
+        r << (p | 2 ? 'w' : '-')
+        r << (p | 1 ? 'x' : '-')
       else
         # Not the most efficient but checks for multiple and invalid chars.
         s = p.tr '-', ''
-        r << (s.sub!('r', '')?'r':'-')
-        r << (s.sub!('w', '')?'w':'-')
-        r << (s.sub!('x', '')?'x':'-')#'
+        r << (s.sub!('r', '') ? 'r' : '-')
+        r << (s.sub!('w', '') ? 'w' : '-')
+        r << (s.sub!('x', '') ? 'x' : '-')
         if !s.empty?
           raise ArgumentError, %(Invalid permission set "#{p}".)
         end
