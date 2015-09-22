@@ -218,7 +218,7 @@ Puppet::Type.newtype(:acl) do
     }
     Set.new((non_default + default).map { |perm|
       key = perm.split(':')[0..1].join(':')
-      matching_default = default.reject { |perm| perm !~ /^#{key}:/ }
+      matching_default = default.reject { |tmp_perm| tmp_perm !~ /^#{key}:/ }
       if (matching_default.length > 0)
         matching_default
       else
