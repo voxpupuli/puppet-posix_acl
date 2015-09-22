@@ -1,4 +1,5 @@
 require 'set'
+require 'pathname'
 
 Puppet::Type.newtype(:acl) do
   desc <<-EOT
@@ -67,11 +68,41 @@ Puppet::Type.newtype(:acl) do
     defaultto :lazy
   end
 
-  autorequire(:file) do
-    if self[:path]
-      [self[:path]]
+  # Credits to @itdoesntwork
+  # http://stackoverflow.com/questions/26878341/how-do-i-tell-if-one-path-is-an-ancestor-of-another
+  def self.is_descendant?(a, b)
+    a_list = File.expand_path(a).split('/')
+    b_list = File.expand_path(b).split('/')
+
+    b_list[0..a_list.size-1] == a_list and b_list != a_list
+  end
+
+  # Snippet based on upstream Puppet (ASL 2.0)
+  [:acl, :file].each do | autorequire_type |
+    autorequire(autorequire_type) do
+      req = []
+      path = Pathname.new(self[:path])
+      if autorequire_type != :acl
+        if self[:recursive] == :true
+          catalog.resources.find_all { |r|
+            r.is_a?(Puppet::Type.type(autorequire_type)) and self.class.is_descendant?(self[:path], r[:path])
+          }.each do | found |
+            req << found[:path]
+          end
+        end
+        req << self[:path]
+      end
+      if !path.root?
+        # Start at our parent, to avoid autorequiring ourself
+        parents = path.parent.enum_for(:ascend)
+        if found = parents.find { |p| catalog.resource(autorequire_type, p.to_s) }
+          req << found.to_s
+        end
+      end
+      req
     end
   end
+  # End of Snippet
 
   newproperty(:permission, :array_matching => :all) do
     desc "ACL permission(s)."
@@ -105,7 +136,7 @@ Puppet::Type.newtype(:acl) do
       value = []
       pl.each do |perm|
         if !(perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/)
-          perm = perm.split(':')[0..-2].join(':')
+          perm = perm.split(':',-1)[0..-2].join(':')
           value << perm
         end
       end
@@ -216,8 +247,7 @@ Puppet::Type.newtype(:acl) do
   end
 
   def newchild(path)
-    full_path = ::File.join(self[:path], path)
-    options = @original_parameters.merge(:name => full_path).reject { |param, value| value.nil? }
+    options = @original_parameters.merge(:name => path).reject { |param, value| value.nil? }
     unless File.directory?(options[:name]) then
       options[:permission] = self.class.pick_default_perms(options[:permission]) if options.include?(:permission)
     end
@@ -229,13 +259,26 @@ Puppet::Type.newtype(:acl) do
 
   def generate
     return [] unless self[:recursive] == :true and self[:recursemode] == :deep
-    return [] unless File.directory?(self[:path])
     results = []
-    Dir.chdir(self[:path]) do
-      Dir['**/*'].each do |path|
-        results << newchild(path)
+    paths = Set.new()
+    if File.directory?(self[:path])
+      Dir.chdir(self[:path]) do
+        Dir['**/*'].each do |path|
+          paths << ::File.join(self[:path], path)
+        end
       end
     end
+    # At the time we generate extra resources, all the files might now be present yet.
+    # In prediction to that we also create ACL resources for child file resources that
+    # might not have been applied yet.
+    catalog.resources.find_all { |r|
+      r.is_a?(Puppet::Type.type(:file)) and self.class.is_descendant?(self[:path], r[:path])
+    }.each do | found |
+      paths << found[:path]
+    end
+    paths.each { | path |
+      results << newchild(path)
+    }
     results
   end
 
