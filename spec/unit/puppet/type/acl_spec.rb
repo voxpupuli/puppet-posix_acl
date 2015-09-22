@@ -134,10 +134,10 @@ describe acl_type do
     advanced_perms = ['user:foo:rwx', 'group:foo:rwx', 'default:user:foo:---']
     advanced_perms_results = ['user:foo:---', 'group:foo:rwx']
     it 'should not do anything with no defaults' do
-      expect(acl_type.pick_default_perms(basic_perms)).to eq(basic_perms)
+      expect(acl_type.pick_default_perms(basic_perms)).to match_array(basic_perms)
     end
     it 'should override defaults' do
-      expect(acl_type.pick_default_perms(advanced_perms)).to eq(advanced_perms_results)
+      expect(acl_type.pick_default_perms(advanced_perms)).to match_array(advanced_perms_results)
     end
   end
 
