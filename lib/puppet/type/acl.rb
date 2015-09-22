@@ -1,3 +1,4 @@
+require 'set'
 
 Puppet::Type.newtype(:acl) do
   desc <<-EOT
@@ -210,11 +211,27 @@ Puppet::Type.newtype(:acl) do
     defaultto :false
   end
 
+  def self.pick_default_perms(perms)
+    non_default = perms.reject { |perm| perm =~ /^d/ }
+    default = perms.reject { |perm| perm !~ /^d/ }.map {
+      |perm| perm.split(':')[1..-1].join(':')
+    }
+    Set.new((non_default + default).map { |perm|
+      key = perm.split(':')[0..1].join(':')
+      matching_default = default.reject { |perm| perm !~ /^#{key}:/ }
+      if (matching_default.length > 0)
+        matching_default
+      else
+        perm
+      end
+    }).to_a.flatten
+  end
+
   def newchild(path)
     full_path = ::File.join(self[:path], path)
     options = @original_parameters.merge(:name => full_path).reject { |param, value| value.nil? }
     unless File.directory?(options[:name]) then
-      options[:permission].reject! { |acl| acl.split(':', -1).length == 4 } if options.include?(:permission)
+      options[:permission] = self.class.pick_default_perms(options[:permission]) if options.include?(:permission)
     end
     [:recursive, :recursemode, :path].each do |param|
       options.delete(param) if options.include?(param)
