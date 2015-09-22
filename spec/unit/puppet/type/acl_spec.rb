@@ -129,4 +129,16 @@ describe acl_type do
     end
   end
 
+  context 'when converting default parameters' do
+    basic_perms = ['user:foo:rwx', 'group:foo:rwx']
+    advanced_perms = ['user:foo:rwx', 'group:foo:rwx', 'default:user:foo:---']
+    advanced_perms_results = ['user:foo:---', 'group:foo:rwx']
+    it 'should not do anything with no defaults' do
+      expect(acl_type.pick_default_perms(basic_perms)).to eq(basic_perms)
+    end
+    it 'should override defaults' do
+      expect(acl_type.pick_default_perms(advanced_perms)).to eq(advanced_perms_results)
+    end
+  end
+
 end
