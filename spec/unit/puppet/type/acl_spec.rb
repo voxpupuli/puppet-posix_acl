@@ -129,15 +129,27 @@ describe acl_type do
     end
   end
 
-  context 'when converting default parameters' do
+  context 'when removing default parameters' do
     basic_perms = ['user:foo:rwx', 'group:foo:rwx']
     advanced_perms = ['user:foo:rwx', 'group:foo:rwx', 'default:user:foo:---']
-    advanced_perms_results = ['user:foo:---', 'group:foo:rwx']
+    advanced_perms_results = ['user:foo:rwx', 'group:foo:rwx']
+    mysql_perms = [
+          "user:mysql:rwx",
+          "d:user:mysql:rw",
+          "mask::rwx",
+    ]
+    mysql_perms_results = [
+          "user:mysql:rwx",
+          "mask::rwx",
+    ]
     it 'should not do anything with no defaults' do
       expect(acl_type.pick_default_perms(basic_perms)).to match_array(basic_perms)
     end
-    it 'should override defaults' do
+    it 'should remove defaults' do
       expect(acl_type.pick_default_perms(advanced_perms)).to match_array(advanced_perms_results)
+    end
+    it 'should remove defaults with d:' do
+      expect(acl_type.pick_default_perms(mysql_perms)).to match_array(mysql_perms_results)
     end
   end
 
