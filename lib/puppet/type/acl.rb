@@ -211,20 +211,8 @@ Puppet::Type.newtype(:acl) do
     defaultto :false
   end
 
-  def self.pick_default_perms(perms)
-    non_default = perms.reject { |perm| perm =~ /^d/ }
-    default = perms.reject { |perm| perm !~ /^d/ }.map {
-      |perm| perm.split(':')[1..-1].join(':')
-    }
-    Set.new((non_default + default).map { |perm|
-      key = perm.split(':')[0..1].join(':')
-      matching_default = default.reject { |tmp_perm| tmp_perm !~ /^#{key}:/ }
-      if (matching_default.length > 0)
-        matching_default
-      else
-        perm
-      end
-    }).to_a.flatten
+  def self.pick_default_perms(acl)
+    return acl.reject { |a| a.split(':', -1).length == 4 }
   end
 
   def newchild(path)
