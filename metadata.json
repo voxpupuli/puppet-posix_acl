@@ -1,0 +1,41 @@
+{
+  "name": "dobbymoodge-acl",
+  "version": "0.0.3",
+  "author": "https://github.com/dobbymoodge/puppet-acl/graphs/contributors",
+  "summary": "Puppet ACL Module",
+  "license": "Apache-2.0",
+  "source": "git://github.com/dobbymoodge/puppet-acl.git",
+  "project_page": "http://github.com/dobbymoodge/puppet-acl",
+  "issues_url": "https://github.com/dobbymoodge/puppet-acl/issues",
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Scientific",
+      "operatingsystemrelease": [
+        "7"
+      ]
+    }
+  ],
+  "requirements": [
+  ],
+  "description": "Manages posix 1e ACLs on files, provides base classes so additional ACL standards can be supported.",
+  "dependencies": [
+  ]
+}
