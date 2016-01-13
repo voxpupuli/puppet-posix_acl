@@ -18,3 +18,12 @@ matrix:
     env: PUPPET_GEM_VERSION="~> 4.0" STRICT_VARIABLES="yes"
 notifications:
   email: false
+deploy:
+  provider: puppetforge
+  user: dobbymoodge
+  password:
+    secure: "JESF7N/ZHpNjv6J857qms021csOn6vPVT97bwoOc+K7gVSdMUCUmzRP6igRx8nAatv4Vxu1Z2DeHvLeDkbBoQDkrd4qVVJgi/KwUfbfBluoIwfqyTIk067FP345lghgB3ezKoSDV2IjCbGp6sV/jJ6M73KdmhEOhBRbU/tMUPB8="
+  on:
+    tags: true
+    all_branches: true
+    rvm: 1.9.3
