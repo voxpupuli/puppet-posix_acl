@@ -12,7 +12,7 @@ Puppet::Type.type(:acl).provide(:posixacl, :parent => Puppet::Provider::Acl) do
   def exists?
     permission
   end
-  
+
   def unset_perm(perm, path)
     # Don't try to unset mode bits, it don't make sense!
     if !(perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/)
@@ -48,6 +48,7 @@ Puppet::Type.type(:acl).provide(:posixacl, :parent => Puppet::Provider::Acl) do
   end
 
   def permission
+    return nil unless File.exist?(@resource.value(:path))
     value = []
     #String#lines would be nice, but we need to support Ruby 1.8.5
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
