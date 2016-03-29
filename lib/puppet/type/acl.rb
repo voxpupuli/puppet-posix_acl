@@ -157,9 +157,8 @@ Puppet::Type.newtype(:acl) do
     end
 
     def set_insync(cur_perm)
-      # Puppet.debug "permission.set_insync"
-      test_should = @should.map { |x| x.downcase() }.uniq
-      (cur_perm.sort == test_should.sort) or (provider.check_set and ((test_should - cur_perm).length == 0))
+      should = @should.uniq.sort
+      (cur_perm.sort == should) or (provider.check_set and ((should - cur_perm).length == 0))
     end
 
     def purge_insync(cur_perm)
@@ -174,15 +173,14 @@ Puppet::Type.newtype(:acl) do
     end
 
     def insync?(is)
-      cur_perm = provider.permission
-      Puppet.debug "permission.insync? cur_perm: #{cur_perm.inspect} @should: #{@should.inspect}"
+      Puppet.debug "permission.insync? is: #{is.inspect} @should: #{@should.inspect}"
       if provider.check_purge
-        return purge_insync(cur_perm)
+        return purge_insync(is)
       end
       if provider.check_unset
-        return unset_insync(cur_perm)
+        return unset_insync(is)
       end
-      return set_insync(cur_perm)
+      return set_insync(is)
     end
 
     # Munge into normalised form
