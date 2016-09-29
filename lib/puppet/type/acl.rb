@@ -111,7 +111,7 @@ Puppet::Type.newtype(:acl) do
       if value == :absent or value.include?(:absent)
         super
       else
-        value.inspect
+        value.sort.inspect
       end
     end
 
@@ -119,7 +119,7 @@ Puppet::Type.newtype(:acl) do
       if value == :absent or value.include?(:absent)
         super
       else
-        value.inspect
+        value.sort.inspect
       end
     end
 
