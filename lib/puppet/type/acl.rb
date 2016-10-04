@@ -111,7 +111,7 @@ Puppet::Type.newtype(:acl) do
       if value == :absent or value.include?(:absent)
         super
       else
-        value.join(",")
+        value.sort.inspect
       end
     end
 
@@ -119,7 +119,7 @@ Puppet::Type.newtype(:acl) do
       if value == :absent or value.include?(:absent)
         super
       else
-        value.join(",")
+        value.sort.inspect
       end
     end
 
@@ -175,7 +175,7 @@ Puppet::Type.newtype(:acl) do
 
     def insync?(is)
       cur_perm = provider.permission
-      Puppet.debug "permission.insync? cur_perm: #{cur_perm.sort.join(', ')} @should: #{@should.sort.join(', ')}"
+      Puppet.debug "permission.insync? cur_perm: #{cur_perm.inspect} @should: #{@should.inspect}"
       if provider.check_purge
         return purge_insync(cur_perm)
       end
