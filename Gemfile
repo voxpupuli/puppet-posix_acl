@@ -15,8 +15,10 @@ group :development, :unit_tests do
   gem 'puppetlabs_spec_helper',  :require => false
   gem 'simplecov',               :require => false
   gem 'puppet_facts',            :require => false
-  gem 'json',                    :require => false
+  gem "json", '~> 1.8.3',        :require => false
+  gem "json_pure", '~> 1.8.3',   :require => false
   gem 'metadata-json-lint',      :require => false
+  gem "rake", '< 11.0.0',        :require => false
 end
 
 group :system_tests do
