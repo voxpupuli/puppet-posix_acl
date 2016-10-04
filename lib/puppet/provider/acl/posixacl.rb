@@ -48,7 +48,7 @@ Puppet::Type.type(:acl).provide(:posixacl, :parent => Puppet::Provider::Acl) do
   end
 
   def permission
-    return nil unless File.exist?(@resource.value(:path))
+    return [] unless File.exist?(@resource.value(:path))
     value = []
     #String#lines would be nice, but we need to support Ruby 1.8.5
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
@@ -57,13 +57,9 @@ Puppet::Type.type(:acl).provide(:posixacl, :parent => Puppet::Provider::Acl) do
         value << line
       end
     end
-    case value.length
-      when 0 then nil
-      when 1 then value[0]
-      else value.sort
-    end
+    value.sort
   end
-  
+
   def check_recursive
     # Changed functionality to return boolean true or false
     value = (@resource.value(:recursive) == :true and resource.value(:recursemode) == :lazy)
