@@ -54,7 +54,7 @@ Puppet::Type.type(:acl).provide(:posixacl, :parent => Puppet::Provider::Acl) do
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
       # Strip comments and blank lines
       if !(line =~ /^#/) and !(line == "")
-        value << line
+        value << line.gsub('\040', ' ')
       end
     end
     value.sort
