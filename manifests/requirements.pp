@@ -1,5 +1,5 @@
 class acl::requirements {
-  package{'acl':
+  package { 'acl':
     ensure => 'present',
-  } -> Acl<| |>
+  }
 }

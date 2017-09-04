@@ -104,6 +104,10 @@ Puppet::Type.newtype(:acl) do
   end
   # End of Snippet
 
+  autorequire(:package) do
+    ['acl']
+  end
+
   newproperty(:permission, :array_matching => :all) do
     desc "ACL permission(s)."
 
