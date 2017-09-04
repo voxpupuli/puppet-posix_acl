@@ -139,7 +139,7 @@ Puppet::Type.newtype(:posix_acl) do
       Puppet.debug "permission.strip_perms"
       value = []
       pl.each do |perm|
-        if !(perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/)
+        unless perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/
           perm = perm.split(':',-1)[0..-2].join(':')
           value << perm
         end

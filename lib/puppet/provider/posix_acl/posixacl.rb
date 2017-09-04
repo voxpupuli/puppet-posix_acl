@@ -62,23 +62,23 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, :parent => Puppet::Provider::Ac
 
   def check_recursive
     # Changed functionality to return boolean true or false
-    value = (@resource.value(:recursive) == :true and resource.value(:recursemode) == :lazy)
+    @resource.value(:recursive) == :true and resource.value(:recursemode) == :lazy
   end
 
   def check_exact
-    value = (@resource.value(:action) == :exact)
+    @resource.value(:action) == :exact
   end
-  
+
   def check_unset
-    value = (@resource.value(:action) == :unset)
+    @resource.value(:action) == :unset
   end
 
   def check_purge
-    value = (@resource.value(:action) == :purge)
+    @resource.value(:action) == :purge
   end
 
   def check_set
-    value = (@resource.value(:action) == :set)
+    @resource.value(:action) == :set
   end
 
   def permission=(value)
