@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-acl_type = Puppet::Type.type(:acl)
+acl_type = Puppet::Type.type(:posix_acl)
 
 
 describe acl_type do

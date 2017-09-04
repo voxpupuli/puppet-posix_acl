@@ -1,6 +1,6 @@
 require File.join(File.dirname(__FILE__), '..', 'acl')
 
-Puppet::Type.type(:acl).provide(:posixacl, :parent => Puppet::Provider::Acl) do
+Puppet::Type.type(:posix_acl).provide(:posixacl, :parent => Puppet::Provider::Acl) do
   desc "Provide posix 1e acl functions using posix getfacl/setfacl commands"
 
   commands :setfacl => '/usr/bin/setfacl'
