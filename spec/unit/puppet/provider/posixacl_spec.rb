@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'rspec/mocks'
 
-provider_class = Puppet::Type.type(:acl).provider(:posixacl)
+provider_class = Puppet::Type.type(:posix_acl).provider(:posixacl)
 
 describe provider_class do
 
