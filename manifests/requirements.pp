@@ -1,5 +1,5 @@
-class acl::requirements {
-  package{'acl':
+class posix_acl::requirements {
+  package { 'acl':
     ensure => 'present',
-  } -> Acl<| |>
+  }
 }

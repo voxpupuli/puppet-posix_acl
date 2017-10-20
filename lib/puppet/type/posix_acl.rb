@@ -1,14 +1,14 @@
 require 'set'
 require 'pathname'
 
-Puppet::Type.newtype(:acl) do
+Puppet::Type.newtype(:posix_acl) do
   desc <<-EOT
      Ensures that a set of ACL permissions are applied to a given file
      or directory.
 
       Example:
 
-          acl { '/var/www/html':
+          posix_acl { '/var/www/html':
             action      => exact,
             permission  => [
               'user::rwx',
@@ -78,11 +78,11 @@ Puppet::Type.newtype(:acl) do
   end
 
   # Snippet based on upstream Puppet (ASL 2.0)
-  [:acl, :file].each do | autorequire_type |
+  [:posix_acl, :file].each do | autorequire_type |
     autorequire(autorequire_type) do
       req = []
       path = Pathname.new(self[:path])
-      if autorequire_type != :acl
+      if autorequire_type != :posix_acl
         if self[:recursive] == :true
           catalog.resources.find_all { |r|
             r.is_a?(Puppet::Type.type(autorequire_type)) and self.class.is_descendant?(self[:path], r[:path])
@@ -103,6 +103,10 @@ Puppet::Type.newtype(:acl) do
     end
   end
   # End of Snippet
+
+  autorequire(:package) do
+    ['acl']
+  end
 
   newproperty(:permission, :array_matching => :all) do
     desc "ACL permission(s)."
@@ -135,7 +139,7 @@ Puppet::Type.newtype(:acl) do
       Puppet.debug "permission.strip_perms"
       value = []
       pl.each do |perm|
-        if !(perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/)
+        unless perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/
           perm = perm.split(':',-1)[0..-2].join(':')
           value << perm
         end
@@ -144,7 +148,7 @@ Puppet::Type.newtype(:acl) do
     end
 
     # in unset_insync and set_insync the test_should has been added as a work around
-    #  to prevent puppet-acl from interpreting recursive permission notation (e.g. rwX)
+    #  to prevent puppet-posix_acl from interpreting recursive permission notation (e.g. rwX)
     #  from causing a false mismatch.  A better solution needs to be implemented to
     #  recursively check permissions, not rely upon getfacl
     def unset_insync(cur_perm)
