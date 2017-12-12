@@ -51,9 +51,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
     # String#lines would be nice, but we need to support Ruby 1.8.5
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
       # Strip comments and blank lines
-      if !(line =~ %r{^#}) && !(line == '')
-        value << line.gsub('\040', ' ')
-      end
+      value << line.gsub('\040', ' ') if !(line =~ %r{^#}) && !(line == '')
     end
     value.sort
   end
@@ -90,9 +88,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
       cur_perm = permission
       perm_to_set = @resource.value(:permission) - cur_perm
       perm_to_unset = cur_perm - @resource.value(:permission)
-      if (perm_to_set.length == 0 && perm_to_unset.length == 0)
-        return false
-      end
+      return false if (perm_to_set.length == 0 && perm_to_unset.length == 0)
       # Take supplied perms literally, unset any existing perms which
       # are absent from ACLs given
       if check_exact

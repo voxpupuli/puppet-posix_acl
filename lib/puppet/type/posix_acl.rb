@@ -169,21 +169,15 @@ Puppet::Type.newtype(:posix_acl) do
       # Puppet.debug "permission.purge_insync"
       cur_perm.each do |perm|
         # If anything other than the mode bits are set, we're not in sync
-        unless (perm =~ %r{^(((u(ser)?)|(g(roup)?)|(o(ther)?)):):})
-          return false
-        end
+        return false unless (perm =~ %r{^(((u(ser)?)|(g(roup)?)|(o(ther)?)):):})
       end
       true
     end
 
     def insync?(is)
       Puppet.debug "permission.insync? is: #{is.inspect} @should: #{@should.inspect}"
-      if provider.check_purge
-        return purge_insync(is)
-      end
-      if provider.check_unset
-        return unset_insync(is)
-      end
+      return purge_insync(is) if provider.check_purge
+      return unset_insync(is) if provider.check_unset
       set_insync(is)
     end
 
@@ -230,9 +224,7 @@ Puppet::Type.newtype(:posix_acl) do
         r << (s.sub!('r', '') ? 'r' : '-')
         r << (s.sub!('w', '') ? 'w' : '-')
         r << (s.sub!('x', '') ? 'x' : '-')
-        unless s.empty?
-          raise ArgumentError, %(Invalid permission set "#{p}".)
-        end
+        raise ArgumentError, %(Invalid permission set "#{p}".) unless s.empty?
       end
       r
     end
