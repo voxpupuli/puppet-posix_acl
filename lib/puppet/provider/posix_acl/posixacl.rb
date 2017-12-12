@@ -51,7 +51,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
     # String#lines would be nice, but we need to support Ruby 1.8.5
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
       # Strip comments and blank lines
-      if !(line =~ /^#/) and !(line == '')
+      if !(line =~ /^#/) && !(line == '')
         value << line.gsub('\040', ' ')
       end
     end
@@ -60,7 +60,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
 
   def check_recursive
     # Changed functionality to return boolean true or false
-    @resource.value(:recursive) == :true and resource.value(:recursemode) == :lazy
+    @resource.value(:recursive) == :true && resource.value(:recursemode) == :lazy
   end
 
   def check_exact

@@ -74,7 +74,7 @@ Puppet::Type.newtype(:posix_acl) do
     a_list = File.expand_path(a).split('/')
     b_list = File.expand_path(b).split('/')
 
-    b_list[0..a_list.size - 1] == a_list and b_list != a_list
+    b_list[0..a_list.size - 1] == a_list && b_list != a_list
   end
 
   # Snippet based on upstream Puppet (ASL 2.0)
@@ -85,7 +85,7 @@ Puppet::Type.newtype(:posix_acl) do
       if autorequire_type != :posix_acl
         if self[:recursive] == :true
           catalog.resources.select { |r|
-            r.is_a?(Puppet::Type.type(autorequire_type)) and self.class.is_descendant?(self[:path], r[:path])
+            r.is_a?(Puppet::Type.type(autorequire_type)) && self.class.is_descendant?(self[:path], r[:path])
           }.each do |found|
             req << found[:path]
           end
@@ -112,7 +112,7 @@ Puppet::Type.newtype(:posix_acl) do
     desc 'ACL permission(s).'
 
     def is_to_s(value)
-      if value == :absent or value.include?(:absent)
+      if value == :absent || value.include?(:absent)
         super
       else
         value.sort.inspect
@@ -120,7 +120,7 @@ Puppet::Type.newtype(:posix_acl) do
     end
 
     def should_to_s(value)
-      if value == :absent or value.include?(:absent)
+      if value == :absent || value.include?(:absent)
         super
       else
         value.sort.inspect
@@ -162,7 +162,7 @@ Puppet::Type.newtype(:posix_acl) do
 
     def set_insync(cur_perm)
       should = @should.uniq.sort
-      (cur_perm.sort == should) or (provider.check_set and ((should - cur_perm).length == 0))
+      (cur_perm.sort == should) || (provider.check_set && ((should - cur_perm).length == 0))
     end
 
     def purge_insync(cur_perm)
@@ -260,7 +260,7 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   def generate
-    return [] unless self[:recursive] == :true and self[:recursemode] == :deep
+    return [] unless self[:recursive] == :true && self[:recursemode] == :deep
     results = []
     paths = Set.new()
     if File.directory?(self[:path])
@@ -274,7 +274,7 @@ Puppet::Type.newtype(:posix_acl) do
     # In prediction to that we also create ACL resources for child file resources that
     # might not have been applied yet.
     catalog.resources.select { |r|
-      r.is_a?(Puppet::Type.type(:file)) and self.class.is_descendant?(self[:path], r[:path])
+      r.is_a?(Puppet::Type.type(:file)) && self.class.is_descendant?(self[:path], r[:path])
     }.each do |found|
       paths << found[:path]
     end
