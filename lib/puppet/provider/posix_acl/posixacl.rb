@@ -5,7 +5,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, :parent => Puppet::Provider) do
   commands :getfacl => '/usr/bin/getfacl'
 
   confine :feature => :posix
-  defaultfor :operatingsystem => [:debian, :ubuntu, :redhat, :centos, :fedora]
+  defaultfor :operatingsystem => [:debian, :ubuntu, :redhat, :centos, :fedora, :sles]
 
   def exists?
     permission
