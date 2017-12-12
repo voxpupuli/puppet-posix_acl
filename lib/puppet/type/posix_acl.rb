@@ -74,7 +74,7 @@ Puppet::Type.newtype(:posix_acl) do
     a_list = File.expand_path(a).split('/')
     b_list = File.expand_path(b).split('/')
 
-    b_list[0..a_list.size-1] == a_list and b_list != a_list
+    b_list[0..a_list.size - 1] == a_list and b_list != a_list
   end
 
   # Snippet based on upstream Puppet (ASL 2.0)
