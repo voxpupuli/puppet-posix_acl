@@ -162,7 +162,7 @@ Puppet::Type.newtype(:posix_acl) do
 
     def set_insync(cur_perm)
       should = @should.uniq.sort
-      (cur_perm.sort == should) || (provider.check_set && ((should - cur_perm).length == 0))
+      (cur_perm.sort == should) || (provider.check_set && (should - cur_perm).empty?)
     end
 
     def purge_insync(cur_perm)
