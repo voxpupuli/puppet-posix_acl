@@ -131,11 +131,9 @@ Puppet::Type.newtype(:posix_acl) do
       provider.permission
     end
 
+    # Remove permission bits from an ACL line, eg:
+    # 'user:root:rwx' becomes 'user:root:'
     def strip_perms(pl)
-      desc = "Remove permission bits from an ACL line, eg:
-              user:root:rwx
-                becomes
-              user:root:"
       Puppet.debug 'permission.strip_perms'
       value = []
       pl.each do |perm|
