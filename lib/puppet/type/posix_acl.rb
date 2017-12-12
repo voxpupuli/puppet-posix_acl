@@ -70,7 +70,7 @@ Puppet::Type.newtype(:posix_acl) do
 
   # Credits to @itdoesntwork
   # http://stackoverflow.com/questions/26878341/how-do-i-tell-if-one-path-is-an-ancestor-of-another
-  def self.is_descendant?(a, b)
+  def self.descendant?(a, b)
     a_list = File.expand_path(a).split('/')
     b_list = File.expand_path(b).split('/')
 
@@ -85,7 +85,7 @@ Puppet::Type.newtype(:posix_acl) do
       if autorequire_type != :posix_acl
         if self[:recursive] == :true
           catalog.resources.select do |r|
-            r.is_a?(Puppet::Type.type(autorequire_type)) && self.class.is_descendant?(self[:path], r[:path])
+            r.is_a?(Puppet::Type.type(autorequire_type)) && self.class.descendant?(self[:path], r[:path])
           end.each do |found|
             req << found[:path]
           end
@@ -111,7 +111,7 @@ Puppet::Type.newtype(:posix_acl) do
   newproperty(:permission, array_matching: :all) do
     desc 'ACL permission(s).'
 
-    def is_to_s(value)
+    def is_to_s(value) # rubocop:disable Style/PredicateName
       if value == :absent || value.include?(:absent)
         super
       else
@@ -266,7 +266,7 @@ Puppet::Type.newtype(:posix_acl) do
     # In prediction to that we also create ACL resources for child file resources that
     # might not have been applied yet.
     catalog.resources.select do |r|
-      r.is_a?(Puppet::Type.type(:file)) && self.class.is_descendant?(self[:path], r[:path])
+      r.is_a?(Puppet::Type.type(:file)) && self.class.descendant?(self[:path], r[:path])
     end.each do |found|
       paths << found[:path]
     end
