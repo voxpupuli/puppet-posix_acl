@@ -154,7 +154,7 @@ Puppet::Type.newtype(:posix_acl) do
     def unset_insync(cur_perm)
       # Puppet.debug "permission.unset_insync"
       test_should = []
-      @should.each { |x| test_should << x.downcase() }
+      @should.each { |x| test_should << x.downcase }
       cp = strip_perms(cur_perm)
       sp = strip_perms(test_should)
       (sp - cp).sort == sp
@@ -254,7 +254,7 @@ Puppet::Type.newtype(:posix_acl) do
   def generate
     return [] unless self[:recursive] == :true && self[:recursemode] == :deep
     results = []
-    paths = Set.new()
+    paths = Set.new
     if File.directory?(self[:path])
       Dir.chdir(self[:path]) do
         Dir['**/*'].each do |path|
