@@ -183,18 +183,12 @@ Puppet::Type.newtype(:posix_acl) do
     munge do |acl|
       r = ''
       a = acl.split ':', -1 # -1 keeps trailing empty fields.
-      if a.length < 3
-        raise ArgumentError, "Too few fields.  At least 3 required, got #{a.length}."
-      elsif a.length > 4
-        raise ArgumentError, "Too many fields.  At most 4 allowed, got #{a.length}."
-      end
+      raise ArgumentError, "Too few fields.  At least 3 required, got #{a.length}." if a.length < 3
+      raise ArgumentError, "Too many fields.  At most 4 allowed, got #{a.length}."  if a.length > 4
       if a.length == 4
         d = a.shift
-        if d == 'd' || d == 'default'
-          r << 'default:'
-        else
-          raise ArgumentError, %(First field of 4 must be "d" or "default", got "#{d}".)
-        end
+        raise ArgumentError, %(First field of 4 must be "d" or "default", got "#{d}".) unless %w[d default].include?(d)
+        r << 'default:'
       end
       t = a.shift # Copy the type.
       r << case t
