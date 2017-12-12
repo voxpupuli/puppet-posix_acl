@@ -51,7 +51,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
     # String#lines would be nice, but we need to support Ruby 1.8.5
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
       # Strip comments and blank lines
-      value << line.gsub('\040', ' ') if !(line =~ %r{^#}) && !(line == '')
+      value << line.gsub('\040', ' ') if line !~ %r{^#} && line != ''
     end
     value.sort
   end
