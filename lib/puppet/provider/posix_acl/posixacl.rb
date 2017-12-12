@@ -48,7 +48,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   def permission
     return [] unless File.exist?(@resource.value(:path))
     value = []
-    #String#lines would be nice, but we need to support Ruby 1.8.5
+    # String#lines would be nice, but we need to support Ruby 1.8.5
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
       # Strip comments and blank lines
       if !(line =~ /^#/) and !(line == '')
