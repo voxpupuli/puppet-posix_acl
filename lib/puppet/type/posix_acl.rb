@@ -108,7 +108,7 @@ Puppet::Type.newtype(:posix_acl) do
     ['acl']
   end
 
-  newproperty(:permission, :array_matching => :all) do
+  newproperty(:permission, array_matching: :all) do
     desc "ACL permission(s)."
 
     def is_to_s(value)
@@ -249,7 +249,7 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   def newchild(path)
-    options = @original_parameters.merge(:name => path).reject { |param, value| value.nil? }
+    options = @original_parameters.merge(name: path).reject { |param, value| value.nil? }
     unless File.directory?(options[:name]) then
       options[:permission] = self.class.pick_default_perms(options[:permission]) if options.include?(:permission)
     end
