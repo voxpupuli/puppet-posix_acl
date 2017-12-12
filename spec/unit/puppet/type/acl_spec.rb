@@ -2,7 +2,6 @@ require 'spec_helper'
 
 acl_type = Puppet::Type.type(:posix_acl)
 
-
 describe acl_type do
   context 'when not setting parameters' do
     it 'fails without permissions' do
