@@ -140,7 +140,7 @@ Puppet::Type.newtype(:posix_acl) do
       value = []
       pl.each do |perm|
         unless perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/
-          perm = perm.split(':',-1)[0..-2].join(':')
+          perm = perm.split(':', -1)[0..-2].join(':')
           value << perm
         end
       end
