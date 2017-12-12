@@ -289,5 +289,4 @@ Puppet::Type.newtype(:posix_acl) do
       raise(Puppet::Error, "permission is a required property.")
     end
   end
-
 end

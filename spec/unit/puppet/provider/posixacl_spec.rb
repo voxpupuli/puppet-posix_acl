@@ -4,7 +4,6 @@ require 'rspec/mocks'
 provider_class = Puppet::Type.type(:posix_acl).provider(:posixacl)
 
 describe provider_class do
-
   it 'declares a getfacl command' do
     expect{
       provider_class.command :getfacl

@@ -152,5 +152,4 @@ describe acl_type do
       expect(acl_type.pick_default_perms(mysql_perms)).to match_array(mysql_perms_results)
     end
   end
-
 end
