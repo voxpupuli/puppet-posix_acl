@@ -1,5 +1,5 @@
 Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
-  desc "Provide posix 1e acl functions using posix getfacl/setfacl commands"
+  desc 'Provide posix 1e acl functions using posix getfacl/setfacl commands'
 
   commands setfacl: '/usr/bin/setfacl'
   commands getfacl: '/usr/bin/getfacl'
@@ -51,7 +51,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
     #String#lines would be nice, but we need to support Ruby 1.8.5
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
       # Strip comments and blank lines
-      if !(line =~ /^#/) and !(line == "")
+      if !(line =~ /^#/) and !(line == '')
         value << line.gsub('\040', ' ')
       end
     end

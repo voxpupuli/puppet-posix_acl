@@ -41,13 +41,13 @@ Puppet::Type.newtype(:posix_acl) do
     EOT
 
   newparam(:action) do
-    desc "What do we do with this list of ACLs? Options are set, unset, exact, and purge"
+    desc 'What do we do with this list of ACLs? Options are set, unset, exact, and purge'
     newvalues(:set, :unset, :exact, :purge)
     defaultto :set
   end
 
   newparam(:path) do
-    desc "The file or directory to which the ACL applies."
+    desc 'The file or directory to which the ACL applies.'
     isnamevar
     validate do |value|
       path = Pathname.new(value)
@@ -109,7 +109,7 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   newproperty(:permission, array_matching: :all) do
-    desc "ACL permission(s)."
+    desc 'ACL permission(s).'
 
     def is_to_s(value)
       if value == :absent or value.include?(:absent)
@@ -136,7 +136,7 @@ Puppet::Type.newtype(:posix_acl) do
               user:root:rwx
                 becomes
               user:root:"
-      Puppet.debug "permission.strip_perms"
+      Puppet.debug 'permission.strip_perms'
       value = []
       pl.each do |perm|
         unless perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/
@@ -239,7 +239,7 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   newparam(:recursive) do
-    desc "Apply ACLs recursively."
+    desc 'Apply ACLs recursively.'
     newvalues(:true, :false)
     defaultto :false
   end
@@ -286,7 +286,7 @@ Puppet::Type.newtype(:posix_acl) do
 
   validate do
     unless self[:permission]
-      raise(Puppet::Error, "permission is a required property.")
+      raise(Puppet::Error, 'permission is a required property.')
     end
   end
 end

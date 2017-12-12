@@ -134,13 +134,13 @@ describe acl_type do
     advanced_perms = ['user:foo:rwx', 'group:foo:rwx', 'default:user:foo:---']
     advanced_perms_results = ['user:foo:rwx', 'group:foo:rwx']
     mysql_perms = [
-          "user:mysql:rwx",
-          "d:user:mysql:rw",
-          "mask::rwx",
+          'user:mysql:rwx',
+          'd:user:mysql:rw',
+          'mask::rwx',
     ]
     mysql_perms_results = [
-          "user:mysql:rwx",
-          "mask::rwx",
+          'user:mysql:rwx',
+          'mask::rwx',
     ]
     it 'should not do anything with no defaults' do
       expect(acl_type.pick_default_perms(basic_perms)).to match_array(basic_perms)
