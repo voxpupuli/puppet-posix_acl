@@ -84,9 +84,9 @@ Puppet::Type.newtype(:posix_acl) do
       path = Pathname.new(self[:path])
       if autorequire_type != :posix_acl
         if self[:recursive] == :true
-          catalog.resources.select { |r|
+          catalog.resources.select do |r|
             r.is_a?(Puppet::Type.type(autorequire_type)) && self.class.is_descendant?(self[:path], r[:path])
-          }.each do |found|
+          end.each do |found|
             req << found[:path]
           end
         end
@@ -273,14 +273,14 @@ Puppet::Type.newtype(:posix_acl) do
     # At the time we generate extra resources, all the files might now be present yet.
     # In prediction to that we also create ACL resources for child file resources that
     # might not have been applied yet.
-    catalog.resources.select { |r|
+    catalog.resources.select do |r|
       r.is_a?(Puppet::Type.type(:file)) && self.class.is_descendant?(self[:path], r[:path])
-    }.each do |found|
+    end.each do |found|
       paths << found[:path]
     end
-    paths.each { |path|
+    paths.each do |path|
       results << newchild(path)
-    }
+    end
     results
   end
 

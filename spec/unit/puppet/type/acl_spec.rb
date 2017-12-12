@@ -6,9 +6,9 @@ acl_type = Puppet::Type.type(:posix_acl)
 describe acl_type do
   context 'when not setting parameters' do
     it 'should fail without permissions' do
-      expect{
+      expect do
         acl_type.new name: '/tmp/foo'
-      }.to raise_error
+      end.to raise_error
     end
   end
   context 'when setting parameters' do
@@ -108,24 +108,24 @@ describe acl_type do
       expect(resource[:recursemode]).to eq(:lazy)
     end
     it 'should fail with a wrong action' do
-      expect{
+      expect do
         acl_type.new name: '/tmp/foo', permission: ['o::rwx'], action: :xset
-      }.to raise_error
+      end.to raise_error
     end
     it 'should fail with a wrong recurselimit' do
-      expect{
+      expect do
         acl_type.new name: '/tmp/foo', permission: ['o::rwx'], recurselimit: :a
-      }.to raise_error
+      end.to raise_error
     end
     it 'should fail with a wrong first argument' do
-      expect{
+      expect do
         acl_type.new name: '/tmp/foo', permission: ['wrong::rwx']
-      }.to raise_error
+      end.to raise_error
     end
     it 'should fail with a wrong last argument' do
-      expect{
+      expect do
         acl_type.new name: '/tmp/foo', permission: ['user::-_-']
-      }.to raise_error
+      end.to raise_error
     end
   end
 
