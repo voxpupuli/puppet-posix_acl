@@ -41,13 +41,13 @@ Puppet::Type.newtype(:posix_acl) do
     EOT
 
   newparam(:action) do
-    desc 'What do we do with this list of ACLs? Options are set, unset, exact, and purge'
+    desc "What do we do with this list of ACLs? Options are set, unset, exact, and purge"
     newvalues(:set, :unset, :exact, :purge)
     defaultto :set
   end
 
   newparam(:path) do
-    desc 'The file or directory to which the ACL applies.'
+    desc "The file or directory to which the ACL applies."
     isnamevar
     validate do |value|
       path = Pathname.new(value)
@@ -74,25 +74,25 @@ Puppet::Type.newtype(:posix_acl) do
     a_list = File.expand_path(a).split('/')
     b_list = File.expand_path(b).split('/')
 
-    b_list[0..a_list.size - 1] == a_list && b_list != a_list
+    b_list[0..a_list.size-1] == a_list and b_list != a_list
   end
 
   # Snippet based on upstream Puppet (ASL 2.0)
-  [:posix_acl, :file].each do |autorequire_type|
+  [:posix_acl, :file].each do | autorequire_type |
     autorequire(autorequire_type) do
       req = []
       path = Pathname.new(self[:path])
       if autorequire_type != :posix_acl
         if self[:recursive] == :true
-          catalog.resources.select do |r|
-            r.is_a?(Puppet::Type.type(autorequire_type)) && self.class.is_descendant?(self[:path], r[:path])
-          end.each do |found|
+          catalog.resources.find_all { |r|
+            r.is_a?(Puppet::Type.type(autorequire_type)) and self.class.is_descendant?(self[:path], r[:path])
+          }.each do | found |
             req << found[:path]
           end
         end
         req << self[:path]
       end
-      unless path.root?
+      if !path.root?
         # Start at our parent, to avoid autorequiring ourself
         parents = path.parent.enum_for(:ascend)
         if found = parents.find { |p| catalog.resource(autorequire_type, p.to_s) }
@@ -108,11 +108,11 @@ Puppet::Type.newtype(:posix_acl) do
     ['acl']
   end
 
-  newproperty(:permission, array_matching: :all) do
-    desc 'ACL permission(s).'
+  newproperty(:permission, :array_matching => :all) do
+    desc "ACL permission(s)."
 
     def is_to_s(value)
-      if value == :absent || value.include?(:absent)
+      if value == :absent or value.include?(:absent)
         super
       else
         value.sort.inspect
@@ -120,7 +120,7 @@ Puppet::Type.newtype(:posix_acl) do
     end
 
     def should_to_s(value)
-      if value == :absent || value.include?(:absent)
+      if value == :absent or value.include?(:absent)
         super
       else
         value.sort.inspect
@@ -136,11 +136,11 @@ Puppet::Type.newtype(:posix_acl) do
               user:root:rwx
                 becomes
               user:root:"
-      Puppet.debug 'permission.strip_perms'
+      Puppet.debug "permission.strip_perms"
       value = []
       pl.each do |perm|
-        unless perm =~ %r{^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):}
-          perm = perm.split(':', -1)[0..-2].join(':')
+        unless perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/
+          perm = perm.split(':',-1)[0..-2].join(':')
           value << perm
         end
       end
@@ -154,7 +154,7 @@ Puppet::Type.newtype(:posix_acl) do
     def unset_insync(cur_perm)
       # Puppet.debug "permission.unset_insync"
       test_should = []
-      @should.each { |x| test_should << x.downcase }
+      @should.each { |x| test_should << x.downcase() }
       cp = strip_perms(cur_perm)
       sp = strip_perms(test_should)
       (sp - cp).sort == sp
@@ -162,23 +162,29 @@ Puppet::Type.newtype(:posix_acl) do
 
     def set_insync(cur_perm)
       should = @should.uniq.sort
-      (cur_perm.sort == should) || (provider.check_set && (should - cur_perm).empty?)
+      (cur_perm.sort == should) or (provider.check_set and ((should - cur_perm).length == 0))
     end
 
     def purge_insync(cur_perm)
       # Puppet.debug "permission.purge_insync"
       cur_perm.each do |perm|
         # If anything other than the mode bits are set, we're not in sync
-        return false unless perm =~ %r{^(((u(ser)?)|(g(roup)?)|(o(ther)?)):):}
+        if !(perm =~ /^(((u(ser)?)|(g(roup)?)|(o(ther)?)):):/)
+          return false
+        end
       end
-      true
+      return true
     end
 
     def insync?(is)
       Puppet.debug "permission.insync? is: #{is.inspect} @should: #{@should.inspect}"
-      return purge_insync(is) if provider.check_purge
-      return unset_insync(is) if provider.check_unset
-      set_insync(is)
+      if provider.check_purge
+        return purge_insync(is)
+      end
+      if provider.check_unset
+        return unset_insync(is)
+      end
+      return set_insync(is)
     end
 
     # Munge into normalised form
@@ -200,20 +206,20 @@ Puppet::Type.newtype(:posix_acl) do
       end
       t = a.shift # Copy the type.
       r << case t
-           when 'u', 'user'
-             'user:'
-           when 'g', 'group'
-             'group:'
-           when 'o', 'other'
-             'other:'
-           when 'm', 'mask'
-             'mask:'
-           else
-             raise ArgumentError, %(Unknown type "#{t}", expected "user", "group", "other" or "mask".)
+      when 'u', 'user'
+        'user:'
+      when 'g', 'group'
+        'group:'
+      when 'o', 'other'
+        'other:'
+      when 'm', 'mask'
+        'mask:'
+      else
+        raise ArgumentError, %(Unknown type "#{t}", expected "user", "group", "other" or "mask".)
       end
       r << "#{a.shift}:" # Copy the "who".
       p = a.shift
-      if p =~ %r{[0-7]}
+      if p =~ /[0-7]/
         p = p.oct
         r << (p | 4 ? 'r' : '-')
         r << (p | 2 ? 'w' : '-')
@@ -224,25 +230,27 @@ Puppet::Type.newtype(:posix_acl) do
         r << (s.sub!('r', '') ? 'r' : '-')
         r << (s.sub!('w', '') ? 'w' : '-')
         r << (s.sub!('x', '') ? 'x' : '-')
-        raise ArgumentError, %(Invalid permission set "#{p}".) unless s.empty?
+        if !s.empty?
+          raise ArgumentError, %(Invalid permission set "#{p}".)
+        end
       end
       r
     end
   end
 
   newparam(:recursive) do
-    desc 'Apply ACLs recursively.'
+    desc "Apply ACLs recursively."
     newvalues(:true, :false)
     defaultto :false
   end
 
   def self.pick_default_perms(acl)
-    acl.reject { |a| a.split(':', -1).length == 4 }
+    return acl.reject { |a| a.split(':', -1).length == 4 }
   end
 
   def newchild(path)
-    options = @original_parameters.merge(name: path).reject { |_param, value| value.nil? }
-    unless File.directory?(options[:name])
+    options = @original_parameters.merge(:name => path).reject { |param, value| value.nil? }
+    unless File.directory?(options[:name]) then
       options[:permission] = self.class.pick_default_perms(options[:permission]) if options.include?(:permission)
     end
     [:recursive, :recursemode, :path].each do |param|
@@ -252,9 +260,9 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   def generate
-    return [] unless self[:recursive] == :true && self[:recursemode] == :deep
+    return [] unless self[:recursive] == :true and self[:recursemode] == :deep
     results = []
-    paths = Set.new
+    paths = Set.new()
     if File.directory?(self[:path])
       Dir.chdir(self[:path]) do
         Dir['**/*'].each do |path|
@@ -265,20 +273,21 @@ Puppet::Type.newtype(:posix_acl) do
     # At the time we generate extra resources, all the files might now be present yet.
     # In prediction to that we also create ACL resources for child file resources that
     # might not have been applied yet.
-    catalog.resources.select do |r|
-      r.is_a?(Puppet::Type.type(:file)) && self.class.is_descendant?(self[:path], r[:path])
-    end.each do |found|
+    catalog.resources.find_all { |r|
+      r.is_a?(Puppet::Type.type(:file)) and self.class.is_descendant?(self[:path], r[:path])
+    }.each do | found |
       paths << found[:path]
     end
-    paths.each do |path|
+    paths.each { | path |
       results << newchild(path)
-    end
+    }
     results
   end
 
   validate do
     unless self[:permission]
-      raise(Puppet::Error, 'permission is a required property.')
+      raise(Puppet::Error, "permission is a required property.")
     end
   end
+
 end

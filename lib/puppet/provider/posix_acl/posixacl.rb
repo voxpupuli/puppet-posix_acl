@@ -1,11 +1,11 @@
-Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
-  desc 'Provide posix 1e acl functions using posix getfacl/setfacl commands'
+Puppet::Type.type(:posix_acl).provide(:posixacl, :parent => Puppet::Provider) do
+  desc "Provide posix 1e acl functions using posix getfacl/setfacl commands"
 
-  commands setfacl: '/usr/bin/setfacl'
-  commands getfacl: '/usr/bin/getfacl'
+  commands :setfacl => '/usr/bin/setfacl'
+  commands :getfacl => '/usr/bin/getfacl'
 
-  confine feature: :posix
-  defaultfor operatingsystem: [:debian, :ubuntu, :redhat, :centos, :fedora, :sles]
+  confine :feature => :posix
+  defaultfor :operatingsystem => [:debian, :ubuntu, :redhat, :centos, :fedora, :sles]
 
   def exists?
     permission
@@ -13,7 +13,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
 
   def unset_perm(perm, path)
     # Don't try to unset mode bits, it don't make sense!
-    unless perm =~ %r{^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):}
+    if !(perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/)
       perm = perm.split(':')[0..-2].join(':')
       if check_recursive
         setfacl('-R', '-n', '-x', perm, path)
@@ -48,17 +48,19 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   def permission
     return [] unless File.exist?(@resource.value(:path))
     value = []
-    # String#lines would be nice, but we need to support Ruby 1.8.5
+    #String#lines would be nice, but we need to support Ruby 1.8.5
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
       # Strip comments and blank lines
-      value << line.gsub('\040', ' ') if line !~ %r{^#} && line != ''
+      if !(line =~ /^#/) and !(line == "")
+        value << line.gsub('\040', ' ')
+      end
     end
     value.sort
   end
 
   def check_recursive
     # Changed functionality to return boolean true or false
-    @resource.value(:recursive) == :true && resource.value(:recursemode) == :lazy
+    @resource.value(:recursive) == :true and resource.value(:recursemode) == :lazy
   end
 
   def check_exact
@@ -77,7 +79,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
     @resource.value(:action) == :set
   end
 
-  def permission=(_value) # TODO: Investigate why we're not using this parameter
+  def permission=(value)
     Puppet.debug @resource.value(:action)
     case @resource.value(:action)
     when :unset
@@ -88,13 +90,15 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
       cur_perm = permission
       perm_to_set = @resource.value(:permission) - cur_perm
       perm_to_unset = cur_perm - @resource.value(:permission)
-      return false if perm_to_set.empty? && perm_to_unset.empty?
+      if (perm_to_set.length == 0 && perm_to_unset.length == 0)
+        return false
+      end
       # Take supplied perms literally, unset any existing perms which
       # are absent from ACLs given
       if check_exact
         perm_to_unset.each do |perm|
           # Skip base perms in unset step
-          if perm =~ %r{^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):}
+          if perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/
             Puppet.debug "skipping unset of base perm: #{perm}"
           else
             unset_perm(perm, @resource.value(:path))
