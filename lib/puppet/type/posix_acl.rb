@@ -92,7 +92,7 @@ Puppet::Type.newtype(:posix_acl) do
         end
         req << self[:path]
       end
-      if !path.root?
+      unless path.root?
         # Start at our parent, to avoid autorequiring ourself
         parents = path.parent.enum_for(:ascend)
         if found = parents.find { |p| catalog.resource(autorequire_type, p.to_s) }
@@ -169,7 +169,7 @@ Puppet::Type.newtype(:posix_acl) do
       # Puppet.debug "permission.purge_insync"
       cur_perm.each do |perm|
         # If anything other than the mode bits are set, we're not in sync
-        if !(perm =~ /^(((u(ser)?)|(g(roup)?)|(o(ther)?)):):/)
+        unless (perm =~ /^(((u(ser)?)|(g(roup)?)|(o(ther)?)):):/)
           return false
         end
       end
@@ -230,7 +230,7 @@ Puppet::Type.newtype(:posix_acl) do
         r << (s.sub!('r', '') ? 'r' : '-')
         r << (s.sub!('w', '') ? 'w' : '-')
         r << (s.sub!('x', '') ? 'x' : '-')
-        if !s.empty?
+        unless s.empty?
           raise ArgumentError, %(Invalid permission set "#{p}".)
         end
       end

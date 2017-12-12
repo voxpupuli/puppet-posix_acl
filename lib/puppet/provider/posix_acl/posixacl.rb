@@ -13,7 +13,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
 
   def unset_perm(perm, path)
     # Don't try to unset mode bits, it don't make sense!
-    if !(perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/)
+    unless (perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/)
       perm = perm.split(':')[0..-2].join(':')
       if check_recursive
         setfacl('-R', '-n', '-x', perm, path)
