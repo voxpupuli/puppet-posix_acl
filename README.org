@@ -1,5 +1,9 @@
 #+TITLE: Acl module for Puppet
 
+* THIS MODULE IS BEING RENAMED TO *posix_acl*
+
+Also, any minute now it's being re-homed at VoxPupuli
+
 * Description
 This plugin module provides a way to set POSIX 1.e (and other standards) file ACLs via Puppet.
 

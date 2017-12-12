@@ -1,12 +1,12 @@
 {
   "name": "dobbymoodge-acl",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "https://github.com/dobbymoodge/puppet-acl/graphs/contributors",
   "summary": "Puppet ACL Module",
   "license": "Apache-2.0",
-  "source": "git://github.com/dobbymoodge/puppet-acl.git",
-  "project_page": "http://github.com/dobbymoodge/puppet-acl",
-  "issues_url": "https://github.com/dobbymoodge/puppet-acl/issues",
+  "source": "git://github.com/dobbymoodge/puppet-posix_acl.git",
+  "project_page": "http://github.com/dobbymoodge/puppet-posix_acl",
+  "issues_url": "https://github.com/dobbymoodge/puppet-posix_acl/issues",
   "operatingsystem_support": [
     {
       "operatingsystem": "RedHat",
