@@ -206,16 +206,16 @@ Puppet::Type.newtype(:posix_acl) do
       end
       t = a.shift # Copy the type.
       r << case t
-      when 'u', 'user'
-        'user:'
-      when 'g', 'group'
-        'group:'
-      when 'o', 'other'
-        'other:'
-      when 'm', 'mask'
-        'mask:'
-      else
-        raise ArgumentError, %(Unknown type "#{t}", expected "user", "group", "other" or "mask".)
+           when 'u', 'user'
+             'user:'
+           when 'g', 'group'
+             'group:'
+           when 'o', 'other'
+             'other:'
+           when 'm', 'mask'
+             'mask:'
+           else
+             raise ArgumentError, %(Unknown type "#{t}", expected "user", "group", "other" or "mask".)
       end
       r << "#{a.shift}:" # Copy the "who".
       p = a.shift
