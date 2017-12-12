@@ -250,7 +250,7 @@ Puppet::Type.newtype(:posix_acl) do
 
   def newchild(path)
     options = @original_parameters.merge(name: path).reject { |param, value| value.nil? }
-    unless File.directory?(options[:name]) then
+    unless File.directory?(options[:name])
       options[:permission] = self.class.pick_default_perms(options[:permission]) if options.include?(:permission)
     end
     [:recursive, :recursemode, :path].each do |param|
