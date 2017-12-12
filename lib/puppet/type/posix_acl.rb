@@ -173,7 +173,7 @@ Puppet::Type.newtype(:posix_acl) do
           return false
         end
       end
-      return true
+      true
     end
 
     def insync?(is)
@@ -184,7 +184,7 @@ Puppet::Type.newtype(:posix_acl) do
       if provider.check_unset
         return unset_insync(is)
       end
-      return set_insync(is)
+      set_insync(is)
     end
 
     # Munge into normalised form
@@ -245,7 +245,7 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   def self.pick_default_perms(acl)
-    return acl.reject { |a| a.split(':', -1).length == 4 }
+    acl.reject { |a| a.split(':', -1).length == 4 }
   end
 
   def newchild(path)
