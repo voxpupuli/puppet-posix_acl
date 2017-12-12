@@ -78,7 +78,7 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   # Snippet based on upstream Puppet (ASL 2.0)
-  [:posix_acl, :file].each do | autorequire_type |
+  [:posix_acl, :file].each do |autorequire_type|
     autorequire(autorequire_type) do
       req = []
       path = Pathname.new(self[:path])
@@ -86,7 +86,7 @@ Puppet::Type.newtype(:posix_acl) do
         if self[:recursive] == :true
           catalog.resources.find_all { |r|
             r.is_a?(Puppet::Type.type(autorequire_type)) and self.class.is_descendant?(self[:path], r[:path])
-          }.each do | found |
+          }.each do |found|
             req << found[:path]
           end
         end
@@ -275,10 +275,10 @@ Puppet::Type.newtype(:posix_acl) do
     # might not have been applied yet.
     catalog.resources.find_all { |r|
       r.is_a?(Puppet::Type.type(:file)) and self.class.is_descendant?(self[:path], r[:path])
-    }.each do | found |
+    }.each do |found|
       paths << found[:path]
     end
-    paths.each { | path |
+    paths.each { |path|
       results << newchild(path)
     }
     results
