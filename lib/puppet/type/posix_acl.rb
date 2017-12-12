@@ -139,7 +139,7 @@ Puppet::Type.newtype(:posix_acl) do
       Puppet.debug 'permission.strip_perms'
       value = []
       pl.each do |perm|
-        unless perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/
+        unless perm =~ %r{^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):}
           perm = perm.split(':', -1)[0..-2].join(':')
           value << perm
         end
@@ -169,7 +169,7 @@ Puppet::Type.newtype(:posix_acl) do
       # Puppet.debug "permission.purge_insync"
       cur_perm.each do |perm|
         # If anything other than the mode bits are set, we're not in sync
-        unless (perm =~ /^(((u(ser)?)|(g(roup)?)|(o(ther)?)):):/)
+        unless (perm =~ %r{^(((u(ser)?)|(g(roup)?)|(o(ther)?)):):})
           return false
         end
       end
@@ -219,7 +219,7 @@ Puppet::Type.newtype(:posix_acl) do
       end
       r << "#{a.shift}:" # Copy the "who".
       p = a.shift
-      if p =~ /[0-7]/
+      if p =~ %r{[0-7]}
         p = p.oct
         r << (p | 4 ? 'r' : '-')
         r << (p | 2 ? 'w' : '-')

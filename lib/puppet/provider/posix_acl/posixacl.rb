@@ -13,7 +13,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
 
   def unset_perm(perm, path)
     # Don't try to unset mode bits, it don't make sense!
-    unless (perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/)
+    unless (perm =~ %r{^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):})
       perm = perm.split(':')[0..-2].join(':')
       if check_recursive
         setfacl('-R', '-n', '-x', perm, path)
@@ -51,7 +51,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
     # String#lines would be nice, but we need to support Ruby 1.8.5
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
       # Strip comments and blank lines
-      if !(line =~ /^#/) && !(line == '')
+      if !(line =~ %r{^#}) && !(line == '')
         value << line.gsub('\040', ' ')
       end
     end
@@ -98,7 +98,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
       if check_exact
         perm_to_unset.each do |perm|
           # Skip base perms in unset step
-          if perm =~ /^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):/
+          if perm =~ %r{^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):}
             Puppet.debug "skipping unset of base perm: #{perm}"
           else
             unset_perm(perm, @resource.value(:path))
