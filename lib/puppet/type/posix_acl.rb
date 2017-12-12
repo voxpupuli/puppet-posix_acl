@@ -169,7 +169,7 @@ Puppet::Type.newtype(:posix_acl) do
       # Puppet.debug "permission.purge_insync"
       cur_perm.each do |perm|
         # If anything other than the mode bits are set, we're not in sync
-        return false unless (perm =~ %r{^(((u(ser)?)|(g(roup)?)|(o(ther)?)):):})
+        return false unless perm =~ %r{^(((u(ser)?)|(g(roup)?)|(o(ther)?)):):}
       end
       true
     end

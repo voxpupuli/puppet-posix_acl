@@ -13,7 +13,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
 
   def unset_perm(perm, path)
     # Don't try to unset mode bits, it don't make sense!
-    unless (perm =~ %r{^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):})
+    unless perm =~ %r{^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):}
       perm = perm.split(':')[0..-2].join(':')
       if check_recursive
         setfacl('-R', '-n', '-x', perm, path)
@@ -88,7 +88,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
       cur_perm = permission
       perm_to_set = @resource.value(:permission) - cur_perm
       perm_to_unset = cur_perm - @resource.value(:permission)
-      return false if (perm_to_set.empty? && perm_to_unset.empty?)
+      return false if perm_to_set.empty? && perm_to_unset.empty?
       # Take supplied perms literally, unset any existing perms which
       # are absent from ACLs given
       if check_exact
