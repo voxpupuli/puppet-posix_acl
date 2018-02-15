@@ -53,7 +53,7 @@ Lint/AmbiguousOperator:
   Enabled: True
 
 Lint/AssignmentInCondition:
-  Enabled: False
+  Enabled: True
 
 Layout/SpaceBeforeComment:
   Enabled: True
@@ -91,7 +91,7 @@ Lint/DefEndAlignment:
   Enabled: True
 
 Lint/EndAlignment:
-  Enabled: False
+  Enabled: True
 
 Lint/DeprecatedClassMethods:
   Enabled: True
@@ -127,7 +127,7 @@ Layout/AccessModifierIndentation:
   Enabled: True
 
 Style/AccessorMethodName:
-  Enabled: False
+  Enabled: True
 
 Style/Alias:
   Enabled: True
@@ -403,7 +403,7 @@ Style/FormatString:
   Enabled: True
 
 Style/MultilineBlockChain:
-  Enabled: False
+  Enabled: True
 
 Style/Semicolon:
   Enabled: True
@@ -542,7 +542,4 @@ Style/FormatStringToken:
 # This is useful, but sometimes a little too picky about where unit tests files
 # are located.
 RSpec/FilePath:
-  Enabled: false
-
-RSpec/MultipleExpectations:
   Enabled: false
