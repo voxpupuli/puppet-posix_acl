@@ -1,5 +1,6 @@
 require 'spec_helper'
 
+# rubocop:disable RSpec/MultipleExpectations
 acl_type = Puppet::Type.type(:posix_acl)
 
 describe acl_type do
@@ -152,3 +153,4 @@ describe acl_type do
     end
   end
 end
+# rubocop:enable RSpec/MultipleExpectations

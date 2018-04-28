@@ -82,6 +82,7 @@ Puppet::Type.newtype(:posix_acl) do
     autorequire(autorequire_type) do
       req = []
       path = Pathname.new(self[:path])
+      # rubocop:disable Style/MultilineBlockChain
       if autorequire_type != :posix_acl
         if self[:recursive] == :true
           catalog.resources.select do |r|
@@ -95,12 +96,14 @@ Puppet::Type.newtype(:posix_acl) do
       unless path.root?
         # Start at our parent, to avoid autorequiring ourself
         parents = path.parent.enum_for(:ascend)
-        if found = parents.find { |p| catalog.resource(autorequire_type, p.to_s) }
+        # should this be = or == ? I don't know
+        if found = parents.find { |p| catalog.resource(autorequire_type, p.to_s) } # rubocop:disable Lint/AssignmentInCondition
           req << found.to_s
         end
       end
       req
     end
+    # rubocop:enable Style/MultilineBlockChain
   end
   # End of Snippet
 
@@ -158,7 +161,7 @@ Puppet::Type.newtype(:posix_acl) do
       (sp - cp).sort == sp
     end
 
-    def set_insync(cur_perm)
+    def set_insync(cur_perm) # rubocop:disable Style/AccessorMethodName
       should = @should.uniq.sort
       (cur_perm.sort == should) || (provider.check_set && (should - cur_perm).empty?)
     end
@@ -202,7 +205,7 @@ Puppet::Type.newtype(:posix_acl) do
              'mask:'
            else
              raise ArgumentError, %(Unknown type "#{t}", expected "user", "group", "other" or "mask".)
-      end
+           end
       r << "#{a.shift}:" # Copy the "who".
       p = a.shift
       if p =~ %r{[0-7]}
@@ -259,7 +262,7 @@ Puppet::Type.newtype(:posix_acl) do
     # might not have been applied yet.
     catalog.resources.select do |r|
       r.is_a?(Puppet::Type.type(:file)) && self.class.descendant?(self[:path], r[:path])
-    end.each do |found|
+    end.each do |found| # rubocop:disable Style/MultilineBlockChain
       paths << found[:path]
     end
     paths.each do |path|
