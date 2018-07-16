@@ -1,6 +1,6 @@
 {
   "name": "puppet-posix_acl",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "author": "Vox Pupuli",
   "summary": "Puppet ACL Module",
   "license": "Apache-2.0",
