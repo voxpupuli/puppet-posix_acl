@@ -75,7 +75,7 @@ permission  => [
   'group:webadmin:rwx',
   'user:apache:rwx',
 ],
-    ```
+```
 
 #### Updated permissions
 ```
