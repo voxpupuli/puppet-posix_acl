@@ -16,8 +16,8 @@ describe provider_class do
   end
   it 'encodes spaces in group names' do
     RSpec::Mocks.with_temporary_scope do
-      Puppet::Type.stubs(:getfacl).returns("group:test group:rwx\n")
-      File.stubs(:exist?).returns(true)
+      allow(Puppet::Type).to receive(:getfacl).and_return("group:test group:rwx\n")
+      allow(File).to receive(:exist?).and_return(true)
       expect do
         provider_class.command :permission
       end == ['group:test\040group:rwx']
