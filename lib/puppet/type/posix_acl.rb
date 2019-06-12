@@ -1,5 +1,6 @@
 require 'set'
 require 'pathname'
+require 'English'
 
 Puppet::Type.newtype(:posix_acl) do
   desc <<-EOT
@@ -161,8 +162,10 @@ Puppet::Type.newtype(:posix_acl) do
       (sp - cp).sort == sp
     end
 
+    # Make sure we are not misinterpreting recursive permission notation (e.g. rwX) when
+    # comparing current to new perms.
     def set_insync(cur_perm) # rubocop:disable Style/AccessorMethodName
-      should = @should.uniq.sort
+      should = @should.uniq.map(&:downcase).sort
       (cur_perm.sort == should) || (provider.check_set && (should - cur_perm).empty?)
     end
 
@@ -218,7 +221,7 @@ Puppet::Type.newtype(:posix_acl) do
         s = p.tr '-', ''
         r << (s.sub!('r', '') ? 'r' : '-')
         r << (s.sub!('w', '') ? 'w' : '-')
-        r << (s.sub!(/x/i, '') ? $~.to_s : '-')
+        r << (s.sub!(%r{x}i, '') ? $LAST_MATCH_INFO.to_s : '-')
         raise ArgumentError, %(Invalid permission set "#{p}".) unless s.empty?
       end
       r
