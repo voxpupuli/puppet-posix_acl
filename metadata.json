@@ -31,6 +31,9 @@
       "operatingsystemrelease": [
         "7"
       ]
+    },
+    {
+      "operatingsystem": "Gentoo"
     }
   ],
   "requirements": [

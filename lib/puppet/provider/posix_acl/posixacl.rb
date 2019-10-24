@@ -1,11 +1,16 @@
 Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   desc 'Provide posix 1e acl functions using posix getfacl/setfacl commands'
 
-  commands setfacl: '/usr/bin/setfacl'
-  commands getfacl: '/usr/bin/getfacl'
+  if Facter.value(:operatingsystem) == 'Gentoo'
+    commands setfacl: '/bin/setfacl'
+    commands getfacl: '/bin/getfacl'
+  else
+    commands setfacl: '/usr/bin/setfacl'
+    commands getfacl: '/usr/bin/getfacl'
+  end
 
   confine feature: :posix
-  defaultfor operatingsystem: [:debian, :ubuntu, :redhat, :centos, :fedora, :sles]
+  defaultfor operatingsystem: [:debian, :ubuntu, :redhat, :centos, :fedora, :sles, :gentoo]
 
   def exists?
     permission
