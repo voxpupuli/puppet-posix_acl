@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v1.0.0](https://github.com/voxpupuli/puppet-posix_acl/tree/v1.0.0) (2019-10-29)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v0.1.1...v1.0.0)
+
+**Breaking changes:**
+
+- modulesync 2.7.0 and drop puppet 4 [\#59](https://github.com/voxpupuli/puppet-posix_acl/pull/59) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- \[RFE\] Extend File type to eliminate need for redundant code [\#16](https://github.com/voxpupuli/puppet-posix_acl/issues/16)
+- Directory +x / Files not +x [\#9](https://github.com/voxpupuli/puppet-posix_acl/issues/9)
+- Add Gentoo support [\#66](https://github.com/voxpupuli/puppet-posix_acl/pull/66) ([paescuj](https://github.com/paescuj))
+- X bit support [\#61](https://github.com/voxpupuli/puppet-posix_acl/pull/61) ([jadestorm](https://github.com/jadestorm))
+
+**Fixed bugs:**
+
+- File is executable when X option is set on directory [\#64](https://github.com/voxpupuli/puppet-posix_acl/issues/64)
+- Fix for issue \#64 [\#65](https://github.com/voxpupuli/puppet-posix_acl/pull/65) ([jadestorm](https://github.com/jadestorm))
+
+**Closed issues:**
+
+- README not displaying in forge [\#55](https://github.com/voxpupuli/puppet-posix_acl/issues/55)
+- Solaris support [\#32](https://github.com/voxpupuli/puppet-posix_acl/issues/32)
+
+**Merged pull requests:**
+
+- Expand the operating system support to include Debian 9 and 10 [\#62](https://github.com/voxpupuli/puppet-posix_acl/pull/62) ([gfa](https://github.com/gfa))
+- Change filename to allow rendering on Puppet Forge. [\#60](https://github.com/voxpupuli/puppet-posix_acl/pull/60) ([cdchase](https://github.com/cdchase))
+
 ## [v0.1.1](https://github.com/voxpupuli/puppet-posix_acl/tree/v0.1.1) (2018-10-14)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v0.1.0...v0.1.1)
