@@ -8,6 +8,12 @@
   "project_page": "https://github.com/voxpupuli/puppet-posix_acl",
   "issues_url": "https://github.com/voxpupuli/puppet-posix_acl/issues",
   "operatingsystem_support": [
+        {
+      "operatingsystem": "Debian",
+      "operatingsystemrelease": [
+        "9", "10"
+      ]
+    },
     {
       "operatingsystem": "RedHat",
       "operatingsystemrelease": [
