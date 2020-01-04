@@ -10,7 +10,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   end
 
   confine feature: :posix
-  defaultfor operatingsystem: [:debian, :ubuntu, :redhat, :centos, :fedora, :sles, :gentoo]
+  defaultfor operatingsystem: %i[debian ubuntu redhat centos fedora sles gentoo]
 
   def exists?
     permission

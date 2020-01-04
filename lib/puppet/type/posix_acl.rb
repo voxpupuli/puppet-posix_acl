@@ -79,7 +79,7 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   # Snippet based on upstream Puppet (ASL 2.0)
-  [:posix_acl, :file].each do |autorequire_type|
+  %i[posix_acl file].each do |autorequire_type|
     autorequire(autorequire_type) do
       req = []
       path = Pathname.new(self[:path])
@@ -243,7 +243,7 @@ Puppet::Type.newtype(:posix_acl) do
     unless File.directory?(options[:name])
       options[:permission] = self.class.pick_default_perms(options[:permission]) if options.include?(:permission)
     end
-    [:recursive, :recursemode, :path].each do |param|
+    %i[recursive recursemode path].each do |param|
       options.delete(param) if options.include?(param)
     end
     self.class.new(options)
