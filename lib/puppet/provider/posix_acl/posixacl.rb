@@ -94,12 +94,14 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
       new_perm = @resource.value(:permission)
       # For comparison purposes, we want to change X to x as it's only useful
       # for setfacl and isn't stored or noted by getfacl.
+      lc_cur_perm = cur_perm.map(&:downcase)
       lc_new_perm = new_perm.map(&:downcase)
       perm_to_set = new_perm - cur_perm
-      perm_to_set_check = lc_new_perm - cur_perm
+      perm_to_set_check = lc_new_perm - lc_cur_perm
       # Unset perms always should match against lowercased x.
-      perm_to_unset = cur_perm - lc_new_perm
-      return false if perm_to_set_check.empty? && perm_to_unset.empty?
+      perm_to_unset = cur_perm - new_perm
+      perm_to_unset_check = lc_cur_perm - lc_new_perm
+      return false if perm_to_set_check.empty? && perm_to_unset_check.empty?
       # Take supplied perms literally, unset any existing perms which
       # are absent from ACLs given
       if check_exact
