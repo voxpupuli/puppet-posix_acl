@@ -79,16 +79,15 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   # Snippet based on upstream Puppet (ASL 2.0)
-  %i[posix_acl file].each do |autorequire_type|
+  [:posix_acl, :file].each do |autorequire_type|
     autorequire(autorequire_type) do
       req = []
       path = Pathname.new(self[:path])
-      # rubocop:disable Style/MultilineBlockChain
       if autorequire_type != :posix_acl
         if self[:recursive] == :true
           catalog.resources.select do |r|
             r.is_a?(Puppet::Type.type(autorequire_type)) && self.class.descendant?(self[:path], r[:path])
-          end.each do |found|
+          end.each do |found| # rubocop:disable Style/MultilineBlockChain
             req << found[:path]
           end
         end
@@ -244,7 +243,7 @@ Puppet::Type.newtype(:posix_acl) do
     unless File.directory?(options[:name])
       options[:permission] = self.class.pick_default_perms(options[:permission]) if options.include?(:permission)
     end
-    %i[recursive recursemode path].each do |param|
+    [:recursive, :recursemode, :path].each do |param|
       options.delete(param) if options.include?(param)
     end
     self.class.new(options)
