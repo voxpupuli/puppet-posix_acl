@@ -165,8 +165,9 @@ Puppet::Type.newtype(:posix_acl) do
     # Make sure we are not misinterpreting recursive permission notation (e.g. rwX) when
     # comparing current to new perms.
     def set_insync(cur_perm) # rubocop:disable Style/AccessorMethodName
+      lc_cur_perm = cur_perm.map(&:downcase).uniq.sort
       should = @should.map(&:downcase).uniq.sort
-      (cur_perm.sort == should) || (provider.check_set && (should - cur_perm).empty?)
+      (lc_cur_perm.sort == should) || (provider.check_set && (should - lc_cur_perm).empty?)
     end
 
     def purge_insync(cur_perm)
