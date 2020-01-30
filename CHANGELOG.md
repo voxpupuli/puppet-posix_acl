@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [Unreleased](https://github.com/voxpupuli/puppet-posix_acl/tree/HEAD)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v1.0.0...HEAD)
+
+**Fixed bugs:**
+
+- fix comparing permissions when they have a mix of upper- and lower-ca… [\#74](https://github.com/voxpupuli/puppet-posix_acl/pull/74) ([unki](https://github.com/unki))
+
 ## [v1.0.0](https://github.com/voxpupuli/puppet-posix_acl/tree/v1.0.0) (2019-10-29)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v0.1.1...v1.0.0)
@@ -26,6 +34,7 @@ These should not affect the functionality of the module.
 
 **Closed issues:**
 
+- Version release [\#67](https://github.com/voxpupuli/puppet-posix_acl/issues/67)
 - README not displaying in forge [\#55](https://github.com/voxpupuli/puppet-posix_acl/issues/55)
 - Solaris support [\#32](https://github.com/voxpupuli/puppet-posix_acl/issues/32)
 
