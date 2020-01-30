@@ -4,9 +4,9 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
-## [Unreleased](https://github.com/voxpupuli/puppet-posix_acl/tree/HEAD)
+## [v1.0.1](https://github.com/voxpupuli/puppet-posix_acl/tree/v1.0.1) (2020-01-30)
 
-[Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v1.0.0...HEAD)
+[Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v1.0.0...v1.0.1)
 
 **Fixed bugs:**
 
