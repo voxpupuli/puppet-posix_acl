@@ -29,11 +29,8 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   end
 
   def set_perm(perm_set, path)
-    if check_recursive
-      args_list = [ '-R', '-n' ]
-    else
-      args_list = [ '-n' ]
-    end
+    args_list = [ '-n' ]
+    args_list << '-R' if check_recursive
     perm_set.each do |perm|
       args_list << '-m'
       args_list << perm
