@@ -128,6 +128,24 @@ describe acl_type do
       expect(resource[:recursemode]).to eq(:lazy)
     end
 
+    it 'gets ignore_missing false by default' do
+      resource = acl_type.new name: '/tmp/foo', permission: ['o::rwx']
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:ignore_missing]).to eq(:false)
+    end
+
+    it 'accepts an ignore_missing "quiet"' do
+      resource = acl_type.new name: '/tmp/foo', permission: ['o::rwx'], ignore_missing: :quiet
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:ignore_missing]).to eq(:quiet)
+    end
+
+    it 'accepts an ignore_missing "notice"' do
+      resource = acl_type.new name: '/tmp/foo', permission: ['o::rwx'], ignore_missing: :notify
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:ignore_missing]).to eq(:notify)
+    end
+
     it 'fails with a wrong action' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['o::rwx'], action: :xset
@@ -149,6 +167,12 @@ describe acl_type do
     it 'fails with a wrong last argument' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['user::-_-']
+      end.to raise_error
+    end
+
+    it 'fails with a wrong ignore_missing' do
+      expect do
+        acl_type.new name: '/tmp/foo', permission: ['o::rwx'], ignore_missing: :true
       end.to raise_error
     end
   end

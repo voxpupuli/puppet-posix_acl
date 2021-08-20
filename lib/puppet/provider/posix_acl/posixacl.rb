@@ -56,7 +56,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   end
 
   def permission
-    return [] unless File.exist?(@resource.value(:path))
+    return ['DOES_NOT_EXIST'] unless File.exist?(@resource.value(:path))
 
     value = []
     # String#lines would be nice, but we need to support Ruby 1.8.5

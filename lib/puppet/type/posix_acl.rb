@@ -49,6 +49,15 @@ Puppet::Type.newtype(:posix_acl) do
     defaultto :set
   end
 
+  newparam(:ignore_missing) do
+    desc 'What to do if files are missing:
+      false: fail run,
+      quiet: quietly do nothing,
+      notify: do not try to to set ACL, but add notice to run'
+    newvalues(:false, :quiet, :notify)
+    defaultto :false
+  end
+
   newparam(:path) do
     desc 'The file or directory to which the ACL applies.'
     isnamevar
@@ -179,6 +188,18 @@ Puppet::Type.newtype(:posix_acl) do
 
     def insync?(is)
       Puppet.debug "permission.insync? is: #{is.inspect} @should: #{@should.inspect}"
+      # handle missing file
+      if provider.permission.include?('DOES_NOT_EXIST')
+        case @resource.value(:ignore_missing)
+        when :false
+          raise ArgumentError, "Path #{@resource.value(:path)} not found"
+        when :quiet
+          return true
+        when :notify
+          Puppet.notice("Not setting ACL for #{@resource.value(:path)} as it does not exist.")
+          return true
+        end
+      end
       return purge_insync(is) if provider.check_purge
       return unset_insync(is) if provider.check_unset
 

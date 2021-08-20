@@ -10,6 +10,7 @@
   * [Using action => exact](#using-action-=>-exact)
   * [Using action => unset](#using-action-=>-unset)
   * [Using action => purge](#using-action-=>-purge)
+  * [Using ignore_missing](#using-ignore_missing)
 7. [Limitations](#limitations)
 
 
@@ -24,6 +25,7 @@ This plugin module provides a way to set POSIX 1.e (and other standards) file AC
 * The `action` parameter can be one of `set`, `exact`, `unset` or `purge`. These are described in detail below.
 * The `provider` parameter allows a choice of filesystem ACL provider. Currently only POSIX 1.e is implemented.
 * The `recursive` parameter allows you to apply the ACLs to all files under the specified path.
+* The `ignore_missing` parameter allows you to set the behavior in case the specified path is not found.
 
 ```
 posix_acl { "/var/log/httpd":
@@ -203,6 +205,12 @@ user::rwx
 group::r-x
 other::r-x
 ```
+
+### Using ignore_missing
+The `ignore_missing` parameter allows to set the behavior in case the specified path does not exist. It can take these values:
+* `false` (default): If the path is missing, an Error is raised.
+* `notify`: If the path is missing, no action is taken, but a notice is shown in the agent output.
+* `quiet`: If the path is missing, the ACL is silently ignored.
 
 ## Limitations
 ### Conflicts with "file" resource type:
