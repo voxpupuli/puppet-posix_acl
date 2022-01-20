@@ -108,7 +108,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
       # Unset perms always should match against lowercased x.
       perm_to_unset = cur_perm - new_perm
       perm_to_unset_check = lc_cur_perm - lc_new_perm
-      return false if perm_to_set_check.empty? && perm_to_unset_check.empty?
+      return false if perm_to_set_check.empty? && perm_to_unset_check.empty? # rubocop:disable Lint/ReturnInVoidContext
 
       # Take supplied perms literally, unset any existing perms which
       # are absent from ACLs given

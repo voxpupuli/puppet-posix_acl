@@ -241,7 +241,7 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   def newchild(path)
-    options = @original_parameters.merge(name: path).reject { |_param, value| value.nil? }
+    options = @original_parameters.merge(name: path).reject { |_param, value| value.nil? } # rubocop:disable Style/CollectionCompact
     options[:permission] = self.class.pick_default_perms(options[:permission]) if !File.directory?(options[:name]) && options.include?(:permission)
     %i[recursive recursemode path].each do |param|
       options.delete(param) if options.include?(param)
