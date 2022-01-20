@@ -3,7 +3,7 @@
 require 'set'
 require 'pathname'
 require 'English'
-
+# rubocop:disable Naming/MethodParameterName
 Puppet::Type.newtype(:posix_acl) do
   desc <<-EOT
      Ensures that a set of ACL permissions are applied to a given file
@@ -279,3 +279,4 @@ Puppet::Type.newtype(:posix_acl) do
     raise(Puppet::Error, 'permission is a required property.') unless self[:permission]
   end
 end
+# rubocop:enable Naming/MethodParameterName
