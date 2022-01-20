@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   desc 'Provide posix 1e acl functions using posix getfacl/setfacl commands'
 
@@ -10,7 +12,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   end
 
   confine feature: :posix
-  defaultfor osfamily: [:debian, :redhat, :suse, :gentoo]
+  defaultfor osfamily: %i[debian redhat suse gentoo]
 
   def exists?
     permission
@@ -55,6 +57,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
 
   def permission
     return [] unless File.exist?(@resource.value(:path))
+
     value = []
     # String#lines would be nice, but we need to support Ruby 1.8.5
     getfacl('--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
@@ -85,7 +88,8 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
     @resource.value(:action) == :set
   end
 
-  def permission=(_value) # TODO: Investigate why we're not using this parameter
+  # TODO: Investigate why we're not using this parameter
+  def permission=(_value)
     Puppet.debug @resource.value(:action)
     case @resource.value(:action)
     when :unset
@@ -104,7 +108,8 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
       # Unset perms always should match against lowercased x.
       perm_to_unset = cur_perm - new_perm
       perm_to_unset_check = lc_cur_perm - lc_new_perm
-      return false if perm_to_set_check.empty? && perm_to_unset_check.empty?
+      return false if perm_to_set_check.empty? && perm_to_unset_check.empty? # rubocop:disable Lint/ReturnInVoidContext
+
       # Take supplied perms literally, unset any existing perms which
       # are absent from ACLs given
       if check_exact

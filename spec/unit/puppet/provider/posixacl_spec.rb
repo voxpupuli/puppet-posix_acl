@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 require 'rspec/mocks'
 
@@ -9,11 +11,13 @@ describe provider_class do
       provider_class.command :getfacl
     end.not_to raise_error
   end
+
   it 'declares a setfacl command' do
     expect do
       provider_class.command :setfacl
     end.not_to raise_error
   end
+
   it 'encodes spaces in group names' do
     RSpec::Mocks.with_temporary_scope do
       allow(Puppet::Type).to receive(:getfacl).and_return("group:test group:rwx\n")
