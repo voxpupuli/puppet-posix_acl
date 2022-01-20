@@ -217,7 +217,7 @@ Puppet::Type.newtype(:posix_acl) do
         d = a.shift
         raise ArgumentError, %(First field of 4 must be "d" or "default", got "#{d}".) unless %w[d default].include?(d)
 
-        r << 'default:'
+        r += 'default:'
       end
       t = a.shift # Copy the type.
       r += case t
@@ -232,19 +232,19 @@ Puppet::Type.newtype(:posix_acl) do
            else
              raise ArgumentError, %(Unknown type "#{t}", expected "user", "group", "other" or "mask".)
            end
-      r << "#{a.shift}:" # Copy the "who".
+      r += "#{a.shift}:" # Copy the "who".
       p = a.shift
       if p =~ %r{[0-7]}
         p = p.oct
-        r << (p | 4 ? 'r' : '-')
-        r << (p | 2 ? 'w' : '-')
-        r << (p | 1 ? 'x' : '-')
+        r += (p | 4 ? 'r' : '-')
+        r += (p | 2 ? 'w' : '-')
+        r += (p | 1 ? 'x' : '-')
       else
         # Not the most efficient but checks for multiple and invalid chars.
         s = p.tr '-', ''
-        r << (s.sub!('r', '') ? 'r' : '-')
-        r << (s.sub!('w', '') ? 'w' : '-')
-        r << (s.sub!(%r{x}i, '') ? $LAST_MATCH_INFO.to_s : '-')
+        r += (s.sub!('r', '') ? 'r' : '-')
+        r += (s.sub!('w', '') ? 'w' : '-')
+        r += (s.sub!(%r{x}i, '') ? $LAST_MATCH_INFO.to_s : '-')
         raise ArgumentError, %(Invalid permission set "#{p}".) unless s.empty?
       end
       r
