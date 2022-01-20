@@ -39,7 +39,7 @@ Puppet::Type.newtype(:posix_acl) do
           file { '/var/www/html':
                  mode => 754,
                }
-    EOT
+  EOT
 
   newparam(:action) do
     desc 'What do we do with this list of ACLs? Options are set, unset, exact, and purge'
@@ -52,9 +52,7 @@ Puppet::Type.newtype(:posix_acl) do
     isnamevar
     validate do |value|
       path = Pathname.new(value)
-      unless path.absolute?
-        raise ArgumentError, "Path must be absolute: #{path}"
-      end
+      raise ArgumentError, "Path must be absolute: #{path}" unless path.absolute?
     end
   end
 
@@ -79,7 +77,7 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   # Snippet based on upstream Puppet (ASL 2.0)
-  [:posix_acl, :file].each do |autorequire_type|
+  %i[posix_acl file].each do |autorequire_type|
     autorequire(autorequire_type) do
       req = []
       path = Pathname.new(self[:path])
@@ -103,7 +101,6 @@ Puppet::Type.newtype(:posix_acl) do
       end
       req
     end
-    # rubocop:enable Style/MultilineBlockChain
   end
   # End of Snippet
 
@@ -182,6 +179,7 @@ Puppet::Type.newtype(:posix_acl) do
       Puppet.debug "permission.insync? is: #{is.inspect} @should: #{@should.inspect}"
       return purge_insync(is) if provider.check_purge
       return unset_insync(is) if provider.check_unset
+
       set_insync(is)
     end
 
@@ -191,9 +189,11 @@ Puppet::Type.newtype(:posix_acl) do
       a = acl.split ':', -1 # -1 keeps trailing empty fields.
       raise ArgumentError, "Too few fields.  At least 3 required, got #{a.length}." if a.length < 3
       raise ArgumentError, "Too many fields.  At most 4 allowed, got #{a.length}."  if a.length > 4
+
       if a.length == 4
         d = a.shift
         raise ArgumentError, %(First field of 4 must be "d" or "default", got "#{d}".) unless %w[d default].include?(d)
+
         r << 'default:'
       end
       t = a.shift # Copy the type.
@@ -240,10 +240,8 @@ Puppet::Type.newtype(:posix_acl) do
 
   def newchild(path)
     options = @original_parameters.merge(name: path).reject { |_param, value| value.nil? }
-    unless File.directory?(options[:name])
-      options[:permission] = self.class.pick_default_perms(options[:permission]) if options.include?(:permission)
-    end
-    [:recursive, :recursemode, :path].each do |param|
+    options[:permission] = self.class.pick_default_perms(options[:permission]) if !File.directory?(options[:name]) && options.include?(:permission)
+    %i[recursive recursemode path].each do |param|
       options.delete(param) if options.include?(param)
     end
     self.class.new(options)
@@ -251,6 +249,7 @@ Puppet::Type.newtype(:posix_acl) do
 
   def generate
     return [] unless self[:recursive] == :true && self[:recursemode] == :deep
+
     results = []
     paths = Set.new
     if File.directory?(self[:path])
@@ -275,8 +274,6 @@ Puppet::Type.newtype(:posix_acl) do
   end
 
   validate do
-    unless self[:permission]
-      raise(Puppet::Error, 'permission is a required property.')
-    end
+    raise(Puppet::Error, 'permission is a required property.') unless self[:permission]
   end
 end
