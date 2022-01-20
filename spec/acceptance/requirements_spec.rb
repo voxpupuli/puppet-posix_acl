@@ -4,13 +4,10 @@ require 'spec_helper_acceptance'
 
 describe 'posix_acl' do
   context 'with default behaviour' do
-    let(:pp) do
-      'include posix_acl::requirements'
-    end
-
-    it 'works idempotently with no errors' do
-      apply_manifest(pp, catch_failures: true)
-      apply_manifest(pp, catch_changes: true)
+    it_behaves_like 'an idempotent resource' do
+      let(:manifest) do
+        'include posix_acl::requirements'
+      end
     end
 
     describe package('acl') do
