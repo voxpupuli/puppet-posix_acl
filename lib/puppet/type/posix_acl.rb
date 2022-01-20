@@ -199,7 +199,7 @@ Puppet::Type.newtype(:posix_acl) do
         r << 'default:'
       end
       t = a.shift # Copy the type.
-      r << case t
+      r += case t
            when 'u', 'user'
              'user:'
            when 'g', 'group'
