@@ -88,7 +88,8 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
     @resource.value(:action) == :set
   end
 
-  def permission=(_value) # TODO: Investigate why we're not using this parameter
+  # TODO: Investigate why we're not using this parameter
+  def permission=(_value)
     Puppet.debug @resource.value(:action)
     case @resource.value(:action)
     when :unset
