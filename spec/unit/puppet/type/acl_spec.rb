@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'spec_helper'
 acl_type = Puppet::Type.type(:posix_acl)
 
