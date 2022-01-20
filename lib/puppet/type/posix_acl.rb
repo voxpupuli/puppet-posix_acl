@@ -113,7 +113,7 @@ Puppet::Type.newtype(:posix_acl) do
   newproperty(:permission, array_matching: :all) do
     desc 'ACL permission(s).'
 
-    def is_to_s(value) # rubocop:disable Style/PredicateName
+    def is_to_s(value) # rubocop:disable Naming/PredicateName
       if value == :absent || value.include?(:absent)
         super
       else
@@ -162,7 +162,7 @@ Puppet::Type.newtype(:posix_acl) do
 
     # Make sure we are not misinterpreting recursive permission notation (e.g. rwX) when
     # comparing current to new perms.
-    def set_insync(cur_perm) # rubocop:disable Style/AccessorMethodName
+    def set_insync(cur_perm) # rubocop:disable Naming/AccessorMethodName
       lc_cur_perm = cur_perm.map(&:downcase).uniq.sort
       should = @should.map(&:downcase).uniq.sort
       (lc_cur_perm.sort == should) || (provider.check_set && (should - lc_cur_perm).empty?)
