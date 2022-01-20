@@ -3,6 +3,7 @@
 require 'spec_helper'
 acl_type = Puppet::Type.type(:posix_acl)
 
+# rubocop:disable RSpec/UnspecifiedException
 describe acl_type do
   context 'when not setting parameters' do
     it 'fails without permissions' do
@@ -178,3 +179,4 @@ describe acl_type do
     end
   end
 end
+# rubocop:enable RSpec/UnspecifiedException
