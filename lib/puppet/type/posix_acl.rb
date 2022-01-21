@@ -282,7 +282,7 @@ Puppet::Type.newtype(:posix_acl) do
         end
       end
     end
-    # At the time we generate extra resources, all the files might now be present yet.
+    # At the time we generate extra resources, all the files might not be present yet.
     # In prediction to that we also create ACL resources for child file resources that
     # might not have been applied yet.
     catalog.resources.select do |r|
