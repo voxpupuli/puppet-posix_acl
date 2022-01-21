@@ -25,6 +25,12 @@ describe acl_type do
       expect(resource[:permission]).to eq(['default:user:root:rwx'])
     end
 
+    it 'works with octal 0 permission parameter' do
+      resource = acl_type.new name: '/tmp/foo', permission: ['user:root:0']
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:permission]).to eq(['user:root:---'])
+    end
+
     it 'works with octal 7 permission parameter' do
       resource = acl_type.new name: '/tmp/foo', permission: ['user:root:7']
       expect(resource[:name]).to eq('/tmp/foo')
