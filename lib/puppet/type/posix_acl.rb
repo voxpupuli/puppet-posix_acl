@@ -217,7 +217,7 @@ Puppet::Type.newtype(:posix_acl) do
         d = a.shift
         raise ArgumentError, %(First field of 4 must be "d" or "default", got "#{d}".) unless %w[d default].include?(d)
 
-        r << 'default:'
+        r += 'default:'
       end
       t = a.shift # Copy the type.
       r += case t

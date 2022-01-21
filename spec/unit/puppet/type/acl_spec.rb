@@ -19,6 +19,18 @@ describe acl_type do
       expect(resource[:permission]).to eq(['user:root:rwx'])
     end
 
+    it 'works with a correct permission parameter that includes a default' do
+      resource = acl_type.new name: '/tmp/foo', permission: ['default:user:root:rwx']
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:permission]).to eq(['default:user:root:rwx'])
+    end
+
+    it 'works with octal 7 permission parameter' do
+      resource = acl_type.new name: '/tmp/foo', permission: ['user:root:7']
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:permission]).to eq(['user:root:rwx'])
+    end
+
     it 'converts a permission string to an array' do
       resource = acl_type.new name: '/tmp/foo', permission: 'user:root:rwx'
       expect(resource[:name]).to eq('/tmp/foo')
@@ -143,6 +155,12 @@ describe acl_type do
       resource = acl_type.new name: '/tmp/foo', permission: ['o::rwx'], ignore_missing: :notify
       expect(resource[:name]).to eq('/tmp/foo')
       expect(resource[:ignore_missing]).to eq(:notify)
+    end
+
+    it 'fails with an invalid default' do
+      expect do
+        acl_type.new name: '/tmp/foo', permission: ['o::rwx:wrong']
+      end.to raise_error(Puppet::ResourceError, %r{First field of 4 must be})
     end
 
     it 'fails with a wrong action' do
