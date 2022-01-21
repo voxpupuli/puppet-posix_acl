@@ -208,6 +208,7 @@ Puppet::Type.newtype(:posix_acl) do
 
     # Munge into normalised form
     munge do |acl|
+      Puppet.debug "munging ACL: #{acl}"
       r = ''
       a = acl.split ':', -1 # -1 keeps trailing empty fields.
       raise ArgumentError, "Too few fields.  At least 3 required, got #{a.length}." if a.length < 3
