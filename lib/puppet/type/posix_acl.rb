@@ -118,6 +118,9 @@ Puppet::Type.newtype(:posix_acl) do
   autorequire(:package) do
     ['acl']
   end
+  autorequire(:file) do
+    self[:path]
+  end
 
   newproperty(:permission, array_matching: :all) do
     desc 'ACL permission(s).'
