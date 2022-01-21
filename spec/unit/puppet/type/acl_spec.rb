@@ -3,13 +3,12 @@
 require 'spec_helper'
 acl_type = Puppet::Type.type(:posix_acl)
 
-# rubocop:disable RSpec/UnspecifiedException
 describe acl_type do
   context 'when not setting parameters' do
     it 'fails without permissions' do
       expect do
         acl_type.new name: '/tmp/foo'
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
   end
 
@@ -149,31 +148,37 @@ describe acl_type do
     it 'fails with a wrong action' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['o::rwx'], action: :xset
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
+    end
+
+    it 'accepts a recurselimit' do
+      expect do
+        acl_type.new name: '/tmp/foo', permission: ['o::rwx'], recurselimit: 42
+      end.to raise_error(Puppet::Error)
     end
 
     it 'fails with a wrong recurselimit' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['o::rwx'], recurselimit: :a
-      end.to raise_error
+      end.to raise_error(Puppet::Error)
     end
 
     it 'fails with a wrong first argument' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['wrong::rwx']
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
 
     it 'fails with a wrong last argument' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['user::-_-']
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
 
     it 'fails with a wrong ignore_missing' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['o::rwx'], ignore_missing: :true
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
   end
 
@@ -203,4 +208,3 @@ describe acl_type do
     end
   end
 end
-# rubocop:enable RSpec/UnspecifiedException
