@@ -208,46 +208,45 @@ Puppet::Type.newtype(:posix_acl) do
 
     # Munge into normalised form
     munge do |acl|
-      r = ''
+      result = ''
       a = acl.split ':', -1 # -1 keeps trailing empty fields.
       raise ArgumentError, "Too few fields.  At least 3 required, got #{a.length}." if a.length < 3
       raise ArgumentError, "Too many fields.  At most 4 allowed, got #{a.length}."  if a.length > 4
 
       if a.length == 4
-        d = a.shift
-        raise ArgumentError, %(First field of 4 must be "d" or "default", got "#{d}".) unless %w[d default].include?(d)
+        default, type, who, perms = a
+        raise ArgumentError, %(First field of 4 must be "d" or "default", got "#{default}".) unless %w[d default].include?(default)
 
-        r << 'default:'
-      end
-      t = a.shift # Copy the type.
-      r += case t
-           when 'u', 'user'
-             'user:'
-           when 'g', 'group'
-             'group:'
-           when 'o', 'other'
-             'other:'
-           when 'm', 'mask'
-             'mask:'
-           else
-             raise ArgumentError, %(Unknown type "#{t}", expected "user", "group", "other" or "mask".)
-           end
-      r << "#{a.shift}:" # Copy the "who".
-      p = a.shift
-      if p =~ %r{[0-7]}
-        p = p.oct
-        r << (p | 4 ? 'r' : '-')
-        r << (p | 2 ? 'w' : '-')
-        r << (p | 1 ? 'x' : '-')
+        result += 'default:'
       else
-        # Not the most efficient but checks for multiple and invalid chars.
-        s = p.tr '-', ''
-        r << (s.sub!('r', '') ? 'r' : '-')
-        r << (s.sub!('w', '') ? 'w' : '-')
-        r << (s.sub!(%r{x}i, '') ? $LAST_MATCH_INFO.to_s : '-')
-        raise ArgumentError, %(Invalid permission set "#{p}".) unless s.empty?
+        type, who, perms = a
       end
-      r
+
+      result += case type
+                when 'u', 'user'
+                  'user:'
+                when 'g', 'group'
+                  'group:'
+                when 'o', 'other'
+                  'other:'
+                when 'm', 'mask'
+                  'mask:'
+                else
+                  raise ArgumentError, %(Unknown type "#{t}", expected "user", "group", "other" or "mask".)
+                end
+      result += "#{who}:"
+      if perms.match?(%r{^[0-7]$})
+        octal = perms.oct
+        result += "#{octal & 4 == 4 ? 'r' : '-'}#{octal & 2 == 2 ? 'w' : '-'}#{octal & 1 == 1 ? 'x' : '-'}"
+      else
+        match = %r{^(?<read>r)?(?<write>w)?(?<execute>[xX])?$}.match(perms.tr('-', ''))
+        raise ArgumentError, %(Invalid permission set "#{p}".) unless match
+
+        %w[read write execute].each do |perm|
+          result += match[perm] || '-'
+        end
+      end
+      result
     end
   end
 

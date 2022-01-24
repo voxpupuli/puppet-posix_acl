@@ -3,19 +3,36 @@
 require 'spec_helper'
 acl_type = Puppet::Type.type(:posix_acl)
 
-# rubocop:disable RSpec/UnspecifiedException
 describe acl_type do
   context 'when not setting parameters' do
     it 'fails without permissions' do
       expect do
         acl_type.new name: '/tmp/foo'
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
   end
 
   context 'when setting parameters' do
     it 'works with a correct permission parameter' do
       resource = acl_type.new name: '/tmp/foo', permission: ['user:root:rwx']
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:permission]).to eq(['user:root:rwx'])
+    end
+
+    it 'works with a correct permission parameter that includes a default' do
+      resource = acl_type.new name: '/tmp/foo', permission: ['default:user:root:rwx']
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:permission]).to eq(['default:user:root:rwx'])
+    end
+
+    it 'works with octal 0 permission parameter' do
+      resource = acl_type.new name: '/tmp/foo', permission: ['user:root:0']
+      expect(resource[:name]).to eq('/tmp/foo')
+      expect(resource[:permission]).to eq(['user:root:---'])
+    end
+
+    it 'works with octal 7 permission parameter' do
+      resource = acl_type.new name: '/tmp/foo', permission: ['user:root:7']
       expect(resource[:name]).to eq('/tmp/foo')
       expect(resource[:permission]).to eq(['user:root:rwx'])
     end
@@ -146,34 +163,46 @@ describe acl_type do
       expect(resource[:ignore_missing]).to eq(:notify)
     end
 
+    it 'fails with an invalid default' do
+      expect do
+        acl_type.new name: '/tmp/foo', permission: ['o::rwx:wrong']
+      end.to raise_error(Puppet::ResourceError, %r{First field of 4 must be})
+    end
+
     it 'fails with a wrong action' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['o::rwx'], action: :xset
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
+    end
+
+    it 'accepts a recurselimit' do
+      expect do
+        acl_type.new name: '/tmp/foo', permission: ['o::rwx'], recurselimit: 42
+      end.to raise_error(Puppet::Error)
     end
 
     it 'fails with a wrong recurselimit' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['o::rwx'], recurselimit: :a
-      end.to raise_error
+      end.to raise_error(Puppet::Error)
     end
 
     it 'fails with a wrong first argument' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['wrong::rwx']
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
 
     it 'fails with a wrong last argument' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['user::-_-']
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
 
     it 'fails with a wrong ignore_missing' do
       expect do
         acl_type.new name: '/tmp/foo', permission: ['o::rwx'], ignore_missing: :true
-      end.to raise_error
+      end.to raise_error(Puppet::ResourceError)
     end
   end
 
@@ -203,4 +232,3 @@ describe acl_type do
     end
   end
 end
-# rubocop:enable RSpec/UnspecifiedException
