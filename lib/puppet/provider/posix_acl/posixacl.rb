@@ -122,7 +122,8 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
           end
         end
       end
-      set_perm(perm_to_set, @resource.value(:path))
+      # It's possible we don't have any perms to set if we only removed some
+      set_perm(perm_to_set, @resource.value(:path)) unless perm_to_set_check.empty?
     end
   end
 end
