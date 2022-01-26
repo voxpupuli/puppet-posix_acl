@@ -11,13 +11,7 @@ describe 'posix_acl' do
         user { 'blub':
           ensure => 'present',
         }
-        file { '/opt/test':
-          ensure => directory,
-          owner  => root,
-          group  => root,
-          mode   => '2770',
-        }
-        -> posix_acl { '/opt/test':
+        posix_acl { '/opt/test':
           action     => exact,
           permission => [
             'user::rwx',
@@ -29,6 +23,13 @@ describe 'posix_acl' do
           provider   => posixacl,
           recursive  => false,
           require => User['blub'],
+        }
+        # we declare the file resource after posix_acl to verfiy autorequire works
+        file { '/opt/test':
+          ensure => directory,
+          owner  => root,
+          group  => root,
+          mode   => '2770',
         }
         PUPPET
       end
@@ -43,13 +44,7 @@ describe 'posix_acl' do
         user { 'blub2':
           ensure => 'present',
         }
-        file { '/opt/test2':
-          ensure => directory,
-          owner  => root,
-          group  => root,
-          mode   => '2770',
-        }
-        -> posix_acl { '/opt/test2':
+        posix_acl { '/opt/test2':
           action     => exact,
           permission => [
             'user::rwx',
@@ -66,6 +61,13 @@ describe 'posix_acl' do
           provider   => posixacl,
           recursive  => false,
           require    => User['blub2'],
+        }
+        # we declare the file resource after posix_acl to verfiy autorequire works
+        file { '/opt/test2':
+          ensure => directory,
+          owner  => root,
+          group  => root,
+          mode   => '2770',
         }
         PUPPET2
       end

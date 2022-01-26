@@ -11,13 +11,7 @@ describe 'posix_acl purging ACLs' do
         user { 'blub':
           ensure => 'present',
         }
-        file { '/opt/test':
-          ensure => directory,
-          owner  => root,
-          group  => root,
-          mode   => '2770',
-        }
-        -> posix_acl { '/opt/test':
+        posix_acl { '/opt/test':
           action     => exact,
           permission => [
             'user::rwx',
@@ -30,6 +24,13 @@ describe 'posix_acl purging ACLs' do
           recursive  => false,
           require => User['blub'],
         }
+        # we declare the file resource after posix_acl to verfiy autorequire works
+        file { '/opt/test':
+          ensure => directory,
+          owner  => root,
+          group  => root,
+          mode   => '2770',
+        }
         PUPPET
       end
     end
@@ -40,13 +41,7 @@ describe 'posix_acl purging ACLs' do
       let(:manifest) do
         <<-PUPPET2
         include posix_acl::requirements
-        file { '/opt/test5':
-          ensure => directory,
-          owner  => root,
-          group  => root,
-          mode   => '2770',
-        }
-        -> posix_acl { '/opt/test5':
+        posix_acl { '/opt/test5':
           action     => exact,
           permission => [
             'user::rwx',
@@ -60,6 +55,13 @@ describe 'posix_acl purging ACLs' do
           ],
           provider   => posixacl,
           recursive  => false,
+        }
+        # we declare the file resource after posix_acl to verfiy autorequire works
+        file { '/opt/test5':
+          ensure => directory,
+          owner  => root,
+          group  => root,
+          mode   => '2770',
         }
         PUPPET2
       end
