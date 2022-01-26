@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v2.0.0](https://github.com/voxpupuli/puppet-posix_acl/tree/v2.0.0) (2022-01-26)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v1.1.0...v2.0.0)
+
+**Breaking changes:**
+
+- Drop EoL Debian 9 support [\#100](https://github.com/voxpupuli/puppet-posix_acl/pull/100) ([bastelfreak](https://github.com/bastelfreak))
+- modulesync 5.1.0 / Drop EoL Puppet 5 support [\#97](https://github.com/voxpupuli/puppet-posix_acl/pull/97) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add support for Debian 11, RedHat 8 \(and derivatives\) [\#95](https://github.com/voxpupuli/puppet-posix_acl/pull/95) ([smortex](https://github.com/smortex))
+- Implement handling of missing files [\#93](https://github.com/voxpupuli/puppet-posix_acl/pull/93) ([raemer](https://github.com/raemer))
+- Mark compatible with Puppet 7 [\#92](https://github.com/voxpupuli/puppet-posix_acl/pull/92) ([Thelvaen](https://github.com/Thelvaen))
+- Changed to osfamily to make it work on oracle linux systems [\#89](https://github.com/voxpupuli/puppet-posix_acl/pull/89) ([housemasterkrause](https://github.com/housemasterkrause))
+
+**Fixed bugs:**
+
+- dont set ACLs if there are no ACLs to change [\#108](https://github.com/voxpupuli/puppet-posix_acl/pull/108) ([bastelfreak](https://github.com/bastelfreak))
+- Properly handle frozen strings [\#107](https://github.com/voxpupuli/puppet-posix_acl/pull/107) ([ekohl](https://github.com/ekohl))
+
+**Closed issues:**
+
+- FrozenStringLiteral breaks puppet module [\#104](https://github.com/voxpupuli/puppet-posix_acl/issues/104)
+- Oracle Linux: Warning about multiple default providers [\#88](https://github.com/voxpupuli/puppet-posix_acl/issues/88)
+
+**Merged pull requests:**
+
+- Add acceptance test and documentation for file autorequire [\#113](https://github.com/voxpupuli/puppet-posix_acl/pull/113) ([bastelfreak](https://github.com/bastelfreak))
+- Add test to verify purging ACLs works [\#111](https://github.com/voxpupuli/puppet-posix_acl/pull/111) ([bastelfreak](https://github.com/bastelfreak))
+- Fix typo in documentation [\#105](https://github.com/voxpupuli/puppet-posix_acl/pull/105) ([bastelfreak](https://github.com/bastelfreak))
+- Manage spec\_helper\_acceptance via modulesync / Enable basic acceptance test [\#102](https://github.com/voxpupuli/puppet-posix_acl/pull/102) ([bastelfreak](https://github.com/bastelfreak))
+- Enable puppet lint for tests/docs [\#101](https://github.com/voxpupuli/puppet-posix_acl/pull/101) ([bastelfreak](https://github.com/bastelfreak))
+- Remove old unsupported Beaker nodesets [\#90](https://github.com/voxpupuli/puppet-posix_acl/pull/90) ([ekohl](https://github.com/ekohl))
+
 ## [v1.1.0](https://github.com/voxpupuli/puppet-posix_acl/tree/v1.1.0) (2021-06-07)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v1.0.1...v1.1.0)
