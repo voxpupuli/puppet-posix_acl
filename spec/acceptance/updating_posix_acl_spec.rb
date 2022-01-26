@@ -11,13 +11,7 @@ describe 'updating posix_acls' do
         user { ['blub', 'blub2']:
           ensure => 'present',
         }
-        file { '/opt/test3':
-          ensure => directory,
-          owner  => root,
-          group  => root,
-          mode   => '2770',
-        }
-        -> posix_acl { '/opt/test3':
+        posix_acl { '/opt/test3':
           action     => exact,
           permission => [
             'user::rwx',
@@ -29,6 +23,13 @@ describe 'updating posix_acls' do
           provider   => posixacl,
           recursive  => false,
           require => User['blub'],
+        }
+        # we declare the file resource after posix_acl to verfiy autorequire work
+        file { '/opt/test3':
+          ensure => directory,
+          owner  => root,
+          group  => root,
+          mode   => '2770',
         }
         PUPPET
       end
@@ -43,13 +44,7 @@ describe 'updating posix_acls' do
         user { ['blub', 'blub2']:
           ensure => 'present',
         }
-        file { '/opt/test3':
-          ensure => directory,
-          owner  => root,
-          group  => root,
-          mode   => '2770',
-        }
-        -> posix_acl { '/opt/test3':
+        posix_acl { '/opt/test3':
           action     => set,
           permission => [
             'user::rwx',
@@ -61,6 +56,13 @@ describe 'updating posix_acls' do
           provider   => posixacl,
           recursive  => false,
           require => User['blub2'],
+        }
+        # we declare the file resource after posix_acl to verfiy autorequire works
+        file { '/opt/test3':
+          ensure => directory,
+          owner  => root,
+          group  => root,
+          mode   => '2770',
         }
         PUPPET
       end
@@ -75,13 +77,7 @@ describe 'updating posix_acls' do
         user { ['blub', 'blub2']:
           ensure => 'present',
         }
-        file { '/opt/test3':
-          ensure => directory,
-          owner  => root,
-          group  => root,
-          mode   => '2770',
-        }
-        -> posix_acl { '/opt/test3':
+        posix_acl { '/opt/test3':
           action     => exact,
           permission => [
             'user::rwx',
@@ -93,6 +89,13 @@ describe 'updating posix_acls' do
           provider   => posixacl,
           recursive  => false,
           require => User['blub2'],
+        }
+        # we declare the file resource after posix_acl to verfiy autorequire works
+        file { '/opt/test3':
+          ensure => directory,
+          owner  => root,
+          group  => root,
+          mode   => '2770',
         }
         PUPPET
       end

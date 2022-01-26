@@ -15,7 +15,17 @@
 
 
 ## Description
-This plugin module provides a way to set POSIX 1.e (and other standards) file ACLs via Puppet.
+This plugin module provides a way to set POSIX 1.e (and other standards) file
+ACLs via Puppet. It provides one class, `posix_acl::requirements`, which
+installs the acl package. It provides `setfacl` and `getfacl`. Those binaries
+are used by the Puppet Provider. You don't have to use the class, but the
+binaries need to be present. Puppet will autorequire the package. That means
+that all posix_acl resources will be applied after the acl package is
+installed, if the package resource is in the catalog.
+
+The type also has logic to autorequire filepaths. It will check the catalog for
+the path where you want to set ACLs and any paths above. If recursive is set to
+true, also ascendings paths are autorequired.
 
 ## Setup
 
