@@ -122,7 +122,7 @@ Puppet::Type.newtype(:posix_acl) do
   newproperty(:permission, array_matching: :all) do
     desc 'ACL permission(s).'
 
-    def is_to_s(value) # rubocop:disable Naming/PredicateName
+    def is_to_s(value)
       if value == :absent || value.include?(:absent)
         super
       else
