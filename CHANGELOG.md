@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.0.0](https://github.com/voxpupuli/puppet-posix_acl/tree/v3.0.0) (2023-06-26)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v2.0.0...v3.0.0)
+
+**Breaking changes:**
+
+- Drop Puppet 6 support [\#117](https://github.com/voxpupuli/puppet-posix_acl/pull/117) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add EL9/Rocky/Alma support [\#121](https://github.com/voxpupuli/puppet-posix_acl/pull/121) ([bastelfreak](https://github.com/bastelfreak))
+- Add puppet 8 support [\#120](https://github.com/voxpupuli/puppet-posix_acl/pull/120) ([bastelfreak](https://github.com/bastelfreak))
+
 ## [v2.0.0](https://github.com/voxpupuli/puppet-posix_acl/tree/v2.0.0) (2022-01-26)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v1.1.0...v2.0.0)
