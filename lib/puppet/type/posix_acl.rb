@@ -277,7 +277,7 @@ Puppet::Type.newtype(:posix_acl) do
     if File.directory?(self[:path])
       Dir.chdir(self[:path]) do
         Dir['**/*'].each do |path|
-          paths << ::File.join(self[:path], path)
+          paths << File.join(self[:path], path)
         end
       end
     end
