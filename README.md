@@ -1,5 +1,15 @@
 # posix_acl
 
+[![Build Status](https://github.com/voxpupuli/puppet-posix_acl/workflows/CI/badge.svg)](https://github.com/voxpupuli/puppet-posix_acl/actions?query=workflow%3ACI)
+[![Release](https://github.com/voxpupuli/puppet-posix_acl/actions/workflows/release.yml/badge.svg)](https://github.com/voxpupuli/puppet-posix_acl/actions/workflows/release.yml)
+[![Puppet Forge](https://img.shields.io/puppetforge/v/puppet/posix_acl.svg)](https://forge.puppetlabs.com/puppet/posix_acl)
+[![Puppet Forge - downloads](https://img.shields.io/puppetforge/dt/puppet/posix_acl.svg)](https://forge.puppetlabs.com/puppet/posix_acl)
+[![Puppet Forge - endorsement](https://img.shields.io/puppetforge/e/puppet/posix_acl.svg)](https://forge.puppetlabs.com/puppet/posix_acl)
+[![Puppet Forge - scores](https://img.shields.io/puppetforge/f/puppet/posix_acl.svg)](https://forge.puppetlabs.com/puppet/posix_acl)
+[![puppetmodule.info docs](https://www.puppetmodule.info/images/badge.png)](https://www.puppetmodule.info/m/puppet-posix_acl)
+[![Apache-2.0 License](https://img.shields.io/github/license/voxpupuli/puppet-posix_acl.svg)](LICENSE)
+[![Donated by John Lamb](https://img.shields.io/badge/donated%20by-John%20Lamb-fb7047.svg)](#transfer-notice)
+
 #### Table of Contents
 
 1. [Description](#description)
@@ -12,7 +22,8 @@
   * [Using action => purge](#using-action-=>-purge)
   * [Using ignore_missing](#using-ignore_missing)
 7. [Limitations](#limitations)
-
+8. [Transfer Notice](#transfer-notice)
+9. [Contributions](#contributions)
 
 ## Description
 This plugin module provides a way to set POSIX 1.e (and other standards) file
@@ -253,3 +264,24 @@ user:apache:rwx                 #effective:r--
 group:root:r-x                  #effective:r--
 group:admin:rwx                 #effective:r--
 ```
+
+## Transfer Notice
+
+This plugin was originally authored by [John 'dobbymoodge' Lamb](https://github.com/dobbymoodge).
+The maintainer preferred that Vox Pupuli take ownership of the module for future improvement and maintenance.
+Existing pull requests and issues were transferred over, please fork and continue to contribute here instead of Camptocamp.
+
+Previously: https://github.com/dobbymoodgep/puppet-posix_acl
+
+## Contributions
+
+Contribution is fairly easy:
+
+* Fork the module into your namespace
+* Create a new branch
+* Commit your bugfix or enhancement
+* Write a test for it (maybe start with the test first)
+* Create a pull request
+
+Detailed instructions are in the [CONTRIBUTING.md](.github/CONTRIBUTING.md)
+file.
