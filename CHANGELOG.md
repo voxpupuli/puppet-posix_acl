@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v3.1.0](https://github.com/voxpupuli/puppet-posix_acl/tree/v3.1.0) (2024-03-14)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v3.0.0...v3.1.0)
+
+**Implemented enhancements:**
+
+- Add puppet-strings documentation [\#129](https://github.com/voxpupuli/puppet-posix_acl/pull/129) ([bastelfreak](https://github.com/bastelfreak))
+- README.md: Add badges /transfer notice/contributing notes [\#128](https://github.com/voxpupuli/puppet-posix_acl/pull/128) ([bastelfreak](https://github.com/bastelfreak))
+- Add Ubuntu 20.04/22.04 & Debian 12 [\#127](https://github.com/voxpupuli/puppet-posix_acl/pull/127) ([tuxmea](https://github.com/tuxmea))
+
 ## [v3.0.0](https://github.com/voxpupuli/puppet-posix_acl/tree/v3.0.0) (2023-06-26)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v2.0.0...v3.0.0)
