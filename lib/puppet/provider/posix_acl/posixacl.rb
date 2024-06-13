@@ -19,6 +19,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   end
 
   def unset_perm(perm, path)
+    Puppet.debug "unset_perm: called with perm: '#{perm}' and path: '#{path}'"
     # Don't try to unset mode bits, it doesn't make sense!
     return if perm =~ %r{^(((u(ser)?)|(g(roup)?)|(m(ask)?)|(o(ther)?)):):}
 
@@ -31,6 +32,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   end
 
   def set_perm(perm_set, path)
+    Puppet.debug "set_perm: called with perm_set: '#{perm_set}' and path: '#{path}'"
     args_list = ['-n']
     args_list << '-R' if check_recursive
     perm_set.each do |perm|
@@ -38,6 +40,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
       args_list << perm
     end
     args_list << path
+    Puppet.debug "calling setfacl with args_list: #{args_list}"
     setfacl(args_list)
   end
 
@@ -89,8 +92,10 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
   end
 
   # TODO: Investigate why we're not using this parameter
-  def permission=(_value)
-    Puppet.debug @resource.value(:action)
+  def permission=(value)
+    Puppet.debug "resource.value(:action): #{@resource.value(:action)}"
+    Puppet.debug "value parameter for permission method is: #{value}"
+    Puppet.debug "new permissions from the instance are: #{@resource.value(:permission)}"
     case @resource.value(:action)
     when :unset
       unset
@@ -98,6 +103,7 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
       purge
     when :exact, :set
       cur_perm = permission
+      Puppet.debug "current permissions are: #{permission}"
       new_perm = @resource.value(:permission)
       # For comparison purposes, we want to change X to x as it's only useful
       # for setfacl and isn't stored or noted by getfacl.
