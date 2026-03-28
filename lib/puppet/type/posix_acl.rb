@@ -237,7 +237,7 @@ Puppet::Type.newtype(:posix_acl) do
       result += "#{who}:"
       if perms.match?(%r{^[0-7]$})
         octal = perms.oct
-        result += "#{octal & 4 == 4 ? 'r' : '-'}#{octal & 2 == 2 ? 'w' : '-'}#{octal & 1 == 1 ? 'x' : '-'}"
+        result += "#{(octal & 4 == 4) ? 'r' : '-'}#{(octal & 2 == 2) ? 'w' : '-'}#{(octal & 1 == 1) ? 'x' : '-'}"
       else
         match = %r{^(?<read>r)?(?<write>w)?(?<execute>[xX])?$}.match(perms.tr('-', ''))
         raise ArgumentError, %(Invalid permission set "#{p}".) unless match
