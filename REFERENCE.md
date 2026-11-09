@@ -10,7 +10,7 @@
 
 ### Resource types
 
-* [`posix_acl`](#posix_acl): Ensures that a set of ACL permissions are applied to a given file or directory.   Example:       posix_acl { '/var/www/html':        action  
+* [`posix_acl`](#posix_acl): Ensures that a set of ACL permissions are applied to a given file or directory.   Example:       posix_acl { '/var/www/html':        action
 
 ## Classes
 
@@ -126,4 +126,3 @@ Valid values: `true`, `false`
 Apply ACLs recursively.
 
 Default value: `false`
-

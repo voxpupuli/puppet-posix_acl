@@ -64,7 +64,12 @@ Puppet::Type.type(:posix_acl).provide(:posixacl, parent: Puppet::Provider) do
       # Strip comments and blank lines
       value << line.gsub('\040', ' ') if line !~ %r{^#} && line != ''
     end
-    value.sort
+    getfacl('--numeric', '--absolute-names', '--no-effective', @resource.value(:path)).split("\n").each do |line|
+      # Strip comments and blank lines
+      value << line.gsub('\040', ' ') if line !~ %r{^#} && line != ''
+    end
+    puts "provider debug: permission list #{value.sort.uniq}"
+    value.sort.uniq
   end
 
   def check_recursive
