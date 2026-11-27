@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 Each new release typically also includes the latest modulesync defaults.
 These should not affect the functionality of the module.
 
+## [v4.0.0](https://github.com/voxpupuli/puppet-posix_acl/tree/v4.0.0) (2026-11-27)
+
+[Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v3.1.0...v4.0.0)
+
+**Breaking changes:**
+
+- Drop support for EOL Debian 10, Debian 11, Ubuntu 20.04 [\#159](https://github.com/voxpupuli/puppet-posix_acl/pull/159) ([kenyon](https://github.com/kenyon))
+- Drop puppet, update openvox minimum version to 8.19 [\#145](https://github.com/voxpupuli/puppet-posix_acl/pull/145) ([TheMeier](https://github.com/TheMeier))
+- Drop EoL EL7 support [\#137](https://github.com/voxpupuli/puppet-posix_acl/pull/137) ([bastelfreak](https://github.com/bastelfreak))
+
+**Implemented enhancements:**
+
+- Add support for Debian 13 [\#160](https://github.com/voxpupuli/puppet-posix_acl/pull/160) ([kenyon](https://github.com/kenyon))
+- Add Ubuntu 24.04 and 26.04 support [\#157](https://github.com/voxpupuli/puppet-posix_acl/pull/157) ([mpdude](https://github.com/mpdude))
+- Update requirements to allow OpenVox 9 [\#154](https://github.com/voxpupuli/puppet-posix_acl/pull/154) ([sebastianrakel](https://github.com/sebastianrakel))
+
+**Fixed bugs:**
+
+- Use structured fact to select the provider [\#143](https://github.com/voxpupuli/puppet-posix_acl/pull/143) ([cmusik](https://github.com/cmusik))
+
 ## [v3.1.0](https://github.com/voxpupuli/puppet-posix_acl/tree/v3.1.0) (2024-03-14)
 
 [Full Changelog](https://github.com/voxpupuli/puppet-posix_acl/compare/v3.0.0...v3.1.0)
